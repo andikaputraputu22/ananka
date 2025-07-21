@@ -6,7 +6,7 @@ interface MainNavigationProps {
     children?: React.ReactNode;
 }
 
-export const MainNavigation = ({ children }: MainNavigationProps) => {
+export const MainNavigation = ({}: MainNavigationProps) => {
     const { activeTab, isMobileMenuOpen, handleTabChange, toggleMobileMenu } = useNavigation();
 
     return (
