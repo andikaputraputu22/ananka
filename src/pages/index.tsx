@@ -71,6 +71,9 @@ const AnankaSite = () => {
           <p className="text-xl md:text-2xl text-gray-300 font-light mb-4 tracking-wide">
             Your Complete Wedding Marketplace
           </p>
+          <p className="text-md md:text-md text-gray-300 font-light mb-4 tracking-wide">
+            By I Putu Andika Putra
+          </p>
           <div className="w-24 h-px bg-gradient-to-r from-transparent via-gray-500 to-transparent mx-auto"></div>
         </div>
 
