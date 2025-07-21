@@ -14,11 +14,5 @@ const playfair = Playfair_Display({
 })
 
 export default function App({ Component, pageProps }: AppProps) {
-  return (
-    <div className={`${inter.variable} ${playfair.variable}`}>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
-    </div>
-  );
+  return <Component {...pageProps} />
 }
