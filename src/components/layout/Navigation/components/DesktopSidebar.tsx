@@ -1,6 +1,8 @@
 import { Menu } from "lucide-react";
 import { navigationItems } from "../constants/navigationItems";
 import { NavigationItemComponent } from "./NavigationItem";
+import { WeddingButton } from "./WeddingButton";
+import Image from "next/image";
 
 interface DesktopSidebarProps {
     activeTab: string;
@@ -9,12 +11,16 @@ interface DesktopSidebarProps {
 
 export const DesktopSidebar = ({ activeTab, onTabChange }: DesktopSidebarProps) => {
     return (
-        <div className="hidden lg:flex lg:w-64 xl:w-72 border-r border-gray-200 flex-col">
+        <div className="hidden lg:flex lg:w-64 xl:w-60 border-r border-gray-200 flex-col">
             {/* Logo */}
             <div className="p-7">
-                <h1 className="text-3xl font-bold text-gray-800 bg-clip-text">
-                    ANANKA
-                </h1>
+                <Image
+                    src="/images/ananka_logo.png"
+                    alt="Ananka Logo"
+                    width={140}
+                    height={0}
+                    priority
+                    className="h-auto" />
             </div>
 
             {/* Navigation Items */}
@@ -28,6 +34,20 @@ export const DesktopSidebar = ({ activeTab, onTabChange }: DesktopSidebarProps) 
                     />
                 ))}
             </nav>
+            
+            {/* Action Buttons */}
+            <div className="p-6 space-y-3">
+                <WeddingButton
+                    variant="join"
+                    onClick={() => alert('Join to Ananka')}>
+                    Join
+                </WeddingButton>
+                <WeddingButton
+                    variant="vendor"
+                    onClick={() => alert('Become Ananka Vendor')}>
+                    Become a Vendor
+                </WeddingButton>
+            </div>
 
             {/* Bottom Section */}
             <div className="p-6">
