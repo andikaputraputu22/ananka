@@ -204,7 +204,7 @@ const MemoryGame = ({ onExit }: { onExit: () => void }) => {
       const firstCard = cards.find(card => card.id === firstId);
       const secondCard = cards.find(card => card.id === secondId);
 
-      if (firstCard.name === secondCard.name) {
+      if (firstCard && secondCard && firstCard.name === secondCard.name) {
         // Match found
         setTimeout(() => {
           setMatchedCards([...matchedCards, firstId, secondId]);
