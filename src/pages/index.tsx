@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Heart, Sparkles, Calendar, Users, Camera, Music, Utensils, MapPin, Play, X, RotateCcw, Trophy } from 'lucide-react';
 
 const AnankaSite = () => {
@@ -25,7 +25,7 @@ const AnankaSite = () => {
     }, 2000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [floatingIcons.length]);
 
   if (gameMode) {
     return <MemoryGame onExit={() => setGameMode(false)} />;
@@ -151,7 +151,6 @@ const MemoryGame = ({ onExit }) => {
   const [matchedCards, setMatchedCards] = useState([]);
   const [moves, setMoves] = useState(0);
   const [gameWon, setGameWon] = useState(false);
-  const [gameStarted, setGameStarted] = useState(false);
 
   // Wedding themed icons for the memory game
   const gameIcons = [
@@ -165,7 +164,7 @@ const MemoryGame = ({ onExit }) => {
     { Icon: MapPin, color: 'text-cyan-400', name: 'mappin' }
   ];
 
-  const initializeGame = () => {
+  const initializeGame = useCallback(() => {
     const gameCards = [...gameIcons, ...gameIcons].map((icon, index) => ({
       id: index,
       ...icon,
@@ -180,8 +179,7 @@ const MemoryGame = ({ onExit }) => {
     setMatchedCards([]);
     setMoves(0);
     setGameWon(false);
-    setGameStarted(true);
-  };
+  }, []);
 
   const handleCardClick = (clickedCard) => {
     if (flippedCards.length === 2 || flippedCards.includes(clickedCard.id) || matchedCards.includes(clickedCard.id)) {
@@ -222,7 +220,7 @@ const MemoryGame = ({ onExit }) => {
 
   useEffect(() => {
     initializeGame();
-  }, []);
+  }, [initializeGame]);
 
   return (
     <div className="min-h-screen bg-gray-950 relative overflow-hidden">
