@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Heart, Sparkles, Calendar, Users, Camera, Music, Utensils, MapPin, Play, X, RotateCcw, Trophy } from 'lucide-react';
+import { Heart, Sparkles, Calendar, Users, Camera, Music, Utensils, MapPin, Play, X, RotateCcw, Trophy, LucideIcon } from 'lucide-react';
 
 interface Card {
   id: number;
-  Icon: any;
+  Icon: LucideIcon;
   color: string;
   name: string;
   flipped: boolean;
