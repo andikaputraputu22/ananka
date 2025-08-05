@@ -1,6 +1,15 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Heart, Sparkles, Calendar, Users, Camera, Music, Utensils, MapPin, Play, X, RotateCcw, Trophy } from 'lucide-react';
 
+interface Card {
+  id: number;
+  Icon: any;
+  color: string;
+  name: string;
+  flipped: boolean;
+  matched: boolean;
+}
+
 const AnankaSite = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [currentIcon, setCurrentIcon] = useState(0);
@@ -145,24 +154,24 @@ const AnankaSite = () => {
   );
 };
 
-const MemoryGame = ({ onExit }) => {
-  const [cards, setCards] = useState([]);
-  const [flippedCards, setFlippedCards] = useState([]);
-  const [matchedCards, setMatchedCards] = useState([]);
+// Wedding themed icons for the memory game
+const gameIcons = [
+  { Icon: Heart, color: 'text-rose-400', name: 'heart' },
+  { Icon: Sparkles, color: 'text-amber-400', name: 'sparkles' },
+  { Icon: Camera, color: 'text-purple-400', name: 'camera' },
+  { Icon: Music, color: 'text-pink-400', name: 'music' },
+  { Icon: Utensils, color: 'text-orange-400', name: 'utensils' },
+  { Icon: Users, color: 'text-emerald-400', name: 'users' },
+  { Icon: Calendar, color: 'text-blue-400', name: 'calendar' },
+  { Icon: MapPin, color: 'text-cyan-400', name: 'mappin' }
+];
+
+const MemoryGame = ({ onExit }: { onExit: () => void }) => {
+  const [cards, setCards] = useState<Card[]>([]);
+  const [flippedCards, setFlippedCards] = useState<number[]>([]);
+  const [matchedCards, setMatchedCards] = useState<number[]>([]);
   const [moves, setMoves] = useState(0);
   const [gameWon, setGameWon] = useState(false);
-
-  // Wedding themed icons for the memory game
-  const gameIcons = [
-    { Icon: Heart, color: 'text-rose-400', name: 'heart' },
-    { Icon: Sparkles, color: 'text-amber-400', name: 'sparkles' },
-    { Icon: Camera, color: 'text-purple-400', name: 'camera' },
-    { Icon: Music, color: 'text-pink-400', name: 'music' },
-    { Icon: Utensils, color: 'text-orange-400', name: 'utensils' },
-    { Icon: Users, color: 'text-emerald-400', name: 'users' },
-    { Icon: Calendar, color: 'text-blue-400', name: 'calendar' },
-    { Icon: MapPin, color: 'text-cyan-400', name: 'mappin' }
-  ];
 
   const initializeGame = useCallback(() => {
     const gameCards = [...gameIcons, ...gameIcons].map((icon, index) => ({
@@ -181,7 +190,7 @@ const MemoryGame = ({ onExit }) => {
     setGameWon(false);
   }, []);
 
-  const handleCardClick = (clickedCard) => {
+  const handleCardClick = (clickedCard: Card) => {
     if (flippedCards.length === 2 || flippedCards.includes(clickedCard.id) || matchedCards.includes(clickedCard.id)) {
       return;
     }
