@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import {
-    Heart,
-    Sparkles,
     Calendar,
     Users,
     Camera,
-    Music,
-    Star,
     Crown,
     ChevronLeft,
     ChevronRight,
     Quote,
-    LucideIcon
+    Image,
+    Play
 } from 'lucide-react';
 
-interface FloatingIcon {
-    Icon: LucideIcon;
-    color: string;
-    delay: string;
+interface TeamMember {
+    id: number;
+    name: string;
+    role: string;
+    description: string;
+    avatar: string;
+    skills: string[];
+    joinDate: string;
 }
 
 interface JourneyQuote {
@@ -29,19 +30,29 @@ interface JourneyQuote {
     avatar: string;
 }
 
-const AnankaMerdekaLanding = () => {
-    const [isLoaded, setIsLoaded] = useState(false);
-    const [currentIcon, setCurrentIcon] = useState(0);
-    const [currentQuote, setCurrentQuote] = useState(0);
+interface GalleryItem {
+    id: number;
+    type: 'image' | 'video';
+    title: string;
+    description: string;
+    date: string;
+    thumbnail: string;
+}
 
-    const floatingIcons: FloatingIcon[] = [
-        { Icon: Heart, color: 'text-rose-400', delay: '0s' },
-        { Icon: Sparkles, color: 'text-amber-400', delay: '0.5s' },
-        { Icon: Calendar, color: 'text-blue-400', delay: '1s' },
-        { Icon: Users, color: 'text-emerald-400', delay: '1.5s' },
-        { Icon: Camera, color: 'text-purple-400', delay: '2s' },
-        { Icon: Music, color: 'text-pink-400', delay: '2.5s' },
-        { Icon: Crown, color: 'text-amber-300', delay: '3s' },
+const AnankaMerdekaLanding = () => {
+    const [activeSection, setActiveSection] = useState('team');
+    const [currentTeamMember, setCurrentTeamMember] = useState(0);
+    const [currentQuote, setCurrentQuote] = useState(0);
+    const teamMembers: TeamMember[] = [
+        {
+            id: 1,
+            name: "I Putu Andika Putra",
+            role: "Founder & Developer",
+            description: "Visioner di balik Ananka, menggabungkan passion teknologi dengan pengalaman perencanaan pernikahan untuk menciptakan solusi yang meaningful. Dengan pengalaman lebih dari 7 tahun di industri teknologi, Putu memiliki visi untuk mengubah cara pasangan merencanakan pernikahan mereka melalui teknologi yang mudah digunakan dan comprehensive.",
+            avatar: "/images/ceo_ananka.jpg",
+            skills: ["Android", "React", "Next JS", "Product Strategy", "System Architecture", "Team Leadership"],
+            joinDate: "Januari 2018"
+        }
     ];
 
     const journeyQuotes: JourneyQuote[] = [
@@ -59,281 +70,384 @@ const AnankaMerdekaLanding = () => {
             author: "Mbak Fore Coffee",
             role: "Penyemangat",
             date: "Agustus 2025",
-            avatar: "✨"
+            avatar: "☕"
         }
     ];
 
-    // Fireworks particles
-    const fireworks = Array.from({ length: 8 }, (_, i) => ({
-        id: i,
-        left: `${10 + Math.random() * 80}%`,
-        top: `${10 + Math.random() * 80}%`,
-        delay: `${Math.random() * 4}s`,
-        duration: `${2 + Math.random() * 3}s`
-    }));
+    const galleryItems: GalleryItem[] = [
+        {
+            id: 1,
+            type: 'image',
+            title: 'Brainstorming Session #1',
+            description: 'Tim berkumpul merencanakan fitur-fitur utama Ananka',
+            date: 'Januari 2026',
+            thumbnail: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=300&fit=crop'
+        },
+        {
+            id: 2,
+            type: 'video',
+            title: 'Prototype Testing',
+            description: 'User testing pertama dengan calon pengantin',
+            date: 'Januari 2026',
+            thumbnail: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=400&h=300&fit=crop'
+        },
+        {
+            id: 3,
+            type: 'image',
+            title: 'Team Outing',
+            description: 'Refreshing setelah milestone pertama tercapai',
+            date: 'Januari 2026',
+            thumbnail: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&h=300&fit=crop'
+        },
+        {
+            id: 4,
+            type: 'image',
+            title: 'First Demo Day',
+            description: 'Presentasi konsep Ananka kepada mentors',
+            date: 'Januari 2026',
+            thumbnail: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=400&h=300&fit=crop'
+        },
+        {
+            id: 5,
+            type: 'image',
+            title: 'Wedding Expo Research',
+            description: 'Riset pasar di pameran pernikahan Jakarta',
+            date: 'Januari 2026',
+            thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=300&fit=crop'
+        },
+        {
+            id: 6,
+            type: 'video',
+            title: 'Development Sprint',
+            description: 'Sesi coding marathon untuk fitur core platform',
+            date: 'Januari 2026',
+            thumbnail: 'https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?w=400&h=300&fit=crop'
+        }
+    ];
+
+    const menuItems = [
+        { id: 'team', label: 'Tim Ananka', icon: Users, count: teamMembers.length },
+        { id: 'gallery', label: 'Galeri Momen', icon: Camera, count: galleryItems.length },
+        { id: 'journey', label: 'Jejak Perjalanan', icon: Quote, count: journeyQuotes.length },
+    ];
 
     useEffect(() => {
-        setIsLoaded(true);
-
-        const iconInterval = setInterval(() => {
-            setCurrentIcon((prev) => (prev + 1) % floatingIcons.length);
-        }, 2000);
-
         const quoteInterval = setInterval(() => {
-            setCurrentQuote((prev) => (prev + 1) % journeyQuotes.length);
-        }, 5000);
+            if (activeSection === 'journey') {
+                setCurrentQuote((prev) => (prev + 1) % journeyQuotes.length);
+            }
+        }, 8000);
 
-        return () => {
-            clearInterval(iconInterval);
-            clearInterval(quoteInterval);
-        };
-    }, [floatingIcons.length, journeyQuotes.length]);
+        return () => clearInterval(quoteInterval);
+    }, [activeSection, journeyQuotes.length]);
 
-    const nextQuote = () => {
-        setCurrentQuote((prev) => (prev + 1) % journeyQuotes.length);
+    const nextTeamMember = () => {
+        setCurrentTeamMember((prev) => (prev + 1) % teamMembers.length);
     };
 
-    const prevQuote = () => {
-        setCurrentQuote((prev) => (prev - 1 + journeyQuotes.length) % journeyQuotes.length);
+    const prevTeamMember = () => {
+        setCurrentTeamMember((prev) => (prev - 1 + teamMembers.length) % teamMembers.length);
     };
 
-    return (
-        <div className="min-h-screen bg-gray-950 relative overflow-hidden">
-            {/* Gradient Background */}
-            <div className="absolute inset-0 z-0">
-                <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-purple-900/10 via-blue-800/5 to-transparent"></div>
-                <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-gray-100/5 via-gray-200/3 to-transparent"></div>
-            </div>
-
-            {/* Floating Particles */}
-            <div className="absolute inset-0 z-10 pointer-events-none">
-                {fireworks.map((firework) => (
-                    <div
-                        key={firework.id}
-                        className="absolute animate-ping"
-                        style={{
-                            left: firework.left,
-                            top: firework.top,
-                            animationDelay: firework.delay,
-                            animationDuration: firework.duration
-                        }}
-                    >
-                        <Star className="w-2 h-2 text-amber-400 opacity-60" />
-                    </div>
-                ))}
-
-                {[...Array(6)].map((_, i) => (
-                    <div
-                        key={i}
-                        className="absolute animate-pulse"
-                        style={{
-                            left: `${20 + Math.random() * 60}%`,
-                            top: `${20 + Math.random() * 60}%`,
-                            animationDelay: `${Math.random() * 3}s`,
-                            animationDuration: `${4 + Math.random() * 2}s`
-                        }}
-                    >
-                        <div className="w-1 h-1 bg-purple-400 rounded-full opacity-30"></div>
-                    </div>
-                ))}
-
-                <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-800 rounded-full mix-blend-multiply filter blur-3xl opacity-10"></div>
-                <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-amber-600 rounded-full mix-blend-multiply filter blur-3xl opacity-10"></div>
-            </div>
-
-            {/* Decorative Pattern Overlay */}
-            <div className="absolute inset-0 opacity-5 pointer-events-none z-10">
-                <div className="absolute top-16 left-16 w-24 h-24 border border-purple-400 rounded-full"></div>
-                <div className="absolute top-32 right-24 w-20 h-20 border border-white rounded-full"></div>
-                <div className="absolute bottom-48 left-24 w-28 h-28 border border-purple-400 rounded-full"></div>
-                <div className="absolute bottom-52 right-20 w-16 h-16 border border-white rounded-full"></div>
-            </div>
-
-            {/* Main Content Container */}
-            <div className="relative z-20 min-h-screen flex flex-col">
-                {/* Hero Section */}
-                <div className="flex-1 flex flex-col items-center justify-center px-6 py-12">
-                    {/* Logo Section */}
-                    <div className={`text-center mb-8 transition-all duration-1500 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-                        <div className="relative inline-block">
-                            <h1 className="text-5xl md:text-7xl font-light bg-gradient-to-r from-purple-400 via-white to-purple-300 bg-clip-text text-transparent mb-2 tracking-widest">
-                                ANANKA
-                            </h1>
-                            <div className="absolute -top-2 -right-6 opacity-60">
-                                <Sparkles className="w-6 h-6 text-amber-400" />
-                            </div>
-                            <div className="absolute -top-1 -left-4 opacity-40">
-                                <Star className="w-4 h-4 text-purple-400" />
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Subtitle */}
-                    <div className={`text-center mb-12 transition-all duration-1500 delay-300 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-                        <p className="text-xl md:text-2xl text-gray-300 font-light mb-2 tracking-wide">
-                            Your Complete Wedding Marketplace
-                        </p>
-                        <p className="text-md md:text-md text-gray-300 font-light mb-4 tracking-wide">
-                            By I Putu Andika Putra
-                        </p>
-                        <div className="w-24 h-px bg-gradient-to-r from-transparent via-purple-400 to-transparent mx-auto"></div>
-                    </div>
-
-                    {/* Rotating Icon */}
-                    <div className={`mb-12 transition-all duration-1500 delay-600 ${isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}>
-                        <div className="relative w-20 h-20 mx-auto">
-                            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500/20 to-blue-500/20 animate-spin" style={{ animationDuration: '8s' }}></div>
-
-                            {floatingIcons.map((item, index) => {
-                                const IconComponent = item.Icon;
-                                return (
-                                    <div
-                                        key={index}
-                                        className={`absolute inset-0 flex items-center justify-center transition-all duration-700 ease-in-out ${
-                                            index === currentIcon ? 'opacity-100 scale-110' : 'opacity-0 scale-90'
-                                        }`}
-                                    >
-                                        <IconComponent className={`w-10 h-10 ${item.color} drop-shadow-lg`} />
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </div>
-
-                    {/* Development Status */}
-                    <div className={`mb-8 transition-all duration-1500 delay-900 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-                        <div className="bg-gradient-to-r from-gray-900/50 via-purple-900/20 to-gray-900/50 backdrop-blur-sm rounded-lg px-6 py-3 border border-purple-700/30 shadow-xl">
-                            <div className="flex items-center space-x-3">
-                                <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
-                                <span className="text-purple-200 font-light text-base tracking-wide">
-                                    DALAM PENGEMBANGAN
-                                </span>
-                                <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Description */}
-                    <div className={`text-center mb-16 transition-all duration-1500 delay-1200 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-                        <p className="text-gray-400 text-base font-light mb-2 max-w-md">
-                            Menyatukan keluarga untuk merencanakan pernikahan impian
-                        </p>
-                        <p className="text-purple-400 text-sm font-light">
-                            Sesuatu yang indah akan segera hadir ✨
-                        </p>
-                    </div>
-                </div>
-
-                {/* Journey Section */}
-                <div className={`relative z-20 px-6 py-16 transition-all duration-1500 delay-1500 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-                    <div className="max-w-4xl mx-auto">
-                        {/* Section Header */}
-                        <div className="text-center mb-12">
-                            <h2 className="text-3xl md:text-4xl font-light bg-gradient-to-r from-purple-400 via-white to-purple-300 bg-clip-text text-transparent mb-4 tracking-wide">
-                                Jejak Perjalanan
-                            </h2>
-                            <p className="text-gray-400 text-lg font-light max-w-2xl mx-auto">
-                                Dari ide hingga menjadi kenyataan, berikut adalah perjalanan pengembangan Ananka
-                            </p>
-                            <div className="w-32 h-px bg-gradient-to-r from-transparent via-purple-400 to-transparent mx-auto mt-4"></div>
-                        </div>
-
-                        {/* Quote Carousel */}
-                        <div className="relative">
-                            {/* Background decoration */}
-                            <div className="absolute inset-0 bg-gradient-to-r from-purple-900/10 via-gray-900/20 to-purple-900/10 backdrop-blur-sm rounded-2xl border border-purple-700/20"></div>
-
-                            {/* Quote Content */}
-                            <div className="relative p-8 md:p-12">
-                                <div className="text-center min-h-[300px] flex flex-col justify-center">
-                                    {/* Quote Icon */}
-                                    <div className="mb-6">
-                                        <Quote className="w-12 h-12 text-purple-400/50 mx-auto" />
-                                    </div>
-
-                                    {/* Current Quote */}
-                                    <div className="mb-8">
-                                        <p className="text-lg md:text-xl text-gray-200 font-light leading-relaxed italic mb-6 max-w-3xl mx-auto">
-                                            &#34;{journeyQuotes[currentQuote].quote}&#34;
-                                        </p>
-
-                                        {/* Author Info */}
-                                        <div className="flex items-center justify-center space-x-4">
-                                            <div className="w-12 h-12 bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-full flex items-center justify-center text-xl">
-                                                {journeyQuotes[currentQuote].avatar}
-                                            </div>
-                                            <div className="text-left">
-                                                <p className="text-purple-300 font-medium">
-                                                    {journeyQuotes[currentQuote].author}
-                                                </p>
-                                                <p className="text-gray-400 text-sm">
-                                                    {journeyQuotes[currentQuote].role}
-                                                </p>
-                                                <p className="text-gray-500 text-xs">
-                                                    {journeyQuotes[currentQuote].date}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Navigation Controls */}
-                                    <div className="flex items-center justify-center space-x-4">
-                                        <button
-                                            onClick={prevQuote}
-                                            className="w-10 h-10 bg-gradient-to-r from-purple-600/20 to-purple-500/20 hover:from-purple-500/30 hover:to-purple-400/30 rounded-full flex items-center justify-center border border-purple-500/30 transition-all duration-300 group"
-                                        >
-                                            <ChevronLeft className="w-5 h-5 text-purple-300 group-hover:text-white transition-colors" />
-                                        </button>
-
-                                        {/* Dots Indicator */}
-                                        <div className="flex space-x-2">
-                                            {journeyQuotes.map((_, index) => (
-                                                <button
-                                                    key={index}
-                                                    onClick={() => setCurrentQuote(index)}
-                                                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                                                        index === currentQuote
-                                                            ? 'bg-purple-400 w-8'
-                                                            : 'bg-gray-600 hover:bg-gray-500'
-                                                    }`}
-                                                />
-                                            ))}
-                                        </div>
-
-                                        <button
-                                            onClick={nextQuote}
-                                            className="w-10 h-10 bg-gradient-to-r from-purple-600/20 to-purple-500/20 hover:from-purple-500/30 hover:to-purple-400/30 rounded-full flex items-center justify-center border border-purple-500/30 transition-all duration-300 group"
-                                        >
-                                            <ChevronRight className="w-5 h-5 text-purple-300 group-hover:text-white transition-colors" />
-                                        </button>
-                                    </div>
-
-                                    {/* Progress Bar */}
-                                    <div className="mt-6 max-w-md mx-auto">
-                                        <div className="bg-gray-700/30 rounded-full h-1 overflow-hidden">
-                                            <div
-                                                className="bg-gradient-to-r from-purple-500 to-purple-400 h-full transition-all duration-500"
-                                                style={{ width: `${((currentQuote + 1) / journeyQuotes.length) * 100}%` }}
+    const renderMainContent = () => {
+        switch (activeSection) {
+            case 'team':
+                return (
+                    <div className="flex items-center justify-center min-h-[80vh]">
+                        <div className="max-w-6xl mx-auto">
+                            <div className="bg-gradient-to-r from-purple-900/30 to-blue-900/30 rounded-3xl p-12 border border-purple-500/20 backdrop-blur-sm">
+                                <div className="flex flex-col lg:flex-row items-center lg:items-center space-y-8 lg:space-y-0 lg:space-x-12">
+                                    {/* Avatar */}
+                                    <div className="relative flex-shrink-0">
+                                        <div className="w-80 h-80 rounded-full overflow-hidden border-4 border-purple-400/30 shadow-2xl">
+                                            <img
+                                                src={teamMembers[currentTeamMember].avatar}
+                                                alt={teamMembers[currentTeamMember].name}
+                                                className="w-full h-full object-cover"
                                             />
                                         </div>
-                                        <p className="text-gray-500 text-xs text-center mt-2">
-                                            {currentQuote + 1} dari {journeyQuotes.length}
+                                    </div>
+
+                                    {/* Info */}
+                                    <div className="flex-1 text-center lg:text-left max-w-2xl">
+                                        <h2 className="text-5xl md:text-6xl font-light text-white mb-4 leading-tight">
+                                            {teamMembers[currentTeamMember].name}
+                                        </h2>
+                                        <p className="text-purple-300 text-2xl md:text-3xl mb-6 font-light">
+                                            {teamMembers[currentTeamMember].role}
                                         </p>
+                                        <p className="text-gray-200 text-xl leading-relaxed mb-8">
+                                            {teamMembers[currentTeamMember].description}
+                                        </p>
+
+                                        {/* Skills */}
+                                        <div className="mb-8">
+                                            <p className="text-gray-300 text-lg mb-4 font-light">Keahlian & Teknologi:</p>
+                                            <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
+                                                {teamMembers[currentTeamMember].skills.map((skill, index) => (
+                                                    <span
+                                                        key={index}
+                                                        className="px-4 py-2 bg-purple-600/30 border border-purple-400/40 rounded-full text-purple-100 text-sm font-medium hover:bg-purple-600/40 transition-colors"
+                                                    >
+                                                        {skill}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        {/* Join Date */}
+                                        <div className="flex items-center justify-center lg:justify-start space-x-3">
+                                            <Calendar className="w-5 h-5 text-purple-400" />
+                                            <p className="text-gray-300 text-lg">
+                                                Memulai perjalanan sejak <span className="text-purple-300 font-medium">{teamMembers[currentTeamMember].joinDate}</span>
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
+                            {/* Navigation Controls */}
+                            {teamMembers.length > 1 && (
+                                <div className="flex items-center justify-center mt-8 space-x-6">
+                                    <button
+                                        onClick={prevTeamMember}
+                                        className="flex items-center justify-center w-12 h-12 bg-purple-600/20 hover:bg-purple-600/30 border border-purple-500/30 hover:border-purple-400/50 rounded-full transition-all duration-200 group"
+                                    >
+                                        <ChevronLeft className="w-6 h-6 text-purple-300 group-hover:text-white" />
+                                    </button>
+
+                                    {/* Dots indicator */}
+                                    <div className="flex space-x-2">
+                                        {teamMembers.map((_, index) => (
+                                            <button
+                                                key={index}
+                                                onClick={() => setCurrentTeamMember(index)}
+                                                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                                                    index === currentTeamMember
+                                                        ? 'bg-purple-400 w-8'
+                                                        : 'bg-gray-600 hover:bg-gray-500'
+                                                }`}
+                                            />
+                                        ))}
+                                    </div>
+
+                                    <button
+                                        onClick={nextTeamMember}
+                                        className="flex items-center justify-center w-12 h-12 bg-purple-600/20 hover:bg-purple-600/30 border border-purple-500/30 hover:border-purple-400/50 rounded-full transition-all duration-200 group"
+                                    >
+                                        <ChevronRight className="w-6 h-6 text-purple-300 group-hover:text-white" />
+                                    </button>
+                                </div>
+                            )}
+
+                            {/* Team member counter */}
+                            <div className="text-center mt-4">
+                                <p className="text-gray-400 text-sm">
+                                    {currentTeamMember + 1} dari {teamMembers.length} anggota tim
+                                </p>
+                            </div>
                         </div>
+                    </div>
+                );
+
+            case 'gallery':
+                return (
+                    <div className="space-y-8">
+                        <div>
+                            <h2 className="text-4xl font-light bg-gradient-to-r from-purple-400 to-white bg-clip-text text-transparent mb-2">
+                                Galeri Momen
+                            </h2>
+                            <p className="text-gray-400">Dokumentasi perjalanan pengembangan Ananka</p>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {galleryItems.map((item) => (
+                                <div
+                                    key={item.id}
+                                    className="bg-gray-800/50 rounded-lg overflow-hidden border border-gray-700/50 hover:border-purple-500/50 transition-all duration-300 group cursor-pointer"
+                                >
+                                    <div className="relative">
+                                        <img
+                                            src={item.thumbnail}
+                                            alt={item.title}
+                                            className="w-full h-48 object-cover"
+                                        />
+                                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                            {item.type === 'video' ? (
+                                                <Play className="w-12 h-12 text-white" />
+                                            ) : (
+                                                <Image className="w-12 h-12 text-white" />
+                                            )}
+                                        </div>
+                                        <div className="absolute top-2 right-2 bg-red-600 px-2 py-1 rounded text-white text-xs">
+                                            JUST SAMPLE
+                                        </div>
+                                    </div>
+                                    <div className="p-4">
+                                        <h3 className="text-white font-medium mb-2">{item.title}</h3>
+                                        <p className="text-gray-400 text-sm mb-2">{item.description}</p>
+                                        <p className="text-gray-500 text-xs">{item.date}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                );
+
+            default: // journey
+                return (
+                    <div className="space-y-8">
+                        <div>
+                            <h2 className="text-4xl font-light bg-gradient-to-r from-purple-400 to-white bg-clip-text text-transparent mb-2">
+                                Jejak Perjalanan
+                            </h2>
+                            <p className="text-gray-400">Dari ide hingga menjadi kenyataan</p>
+                        </div>
+
+                        {/* Current Quote Display */}
+                        <div className="bg-gradient-to-r from-purple-900/20 to-blue-900/20 rounded-2xl p-8 border border-purple-500/20">
+                            <div className="text-center">
+                                <Quote className="w-12 h-12 text-purple-400/50 mx-auto mb-6" />
+                                <p className="text-xl md:text-2xl text-gray-200 font-light leading-relaxed italic mb-6 max-w-4xl mx-auto">
+                                    &#34;{journeyQuotes[currentQuote].quote}&#34;
+                                </p>
+                                <div className="flex items-center justify-center space-x-4">
+                                    <div className="w-12 h-12 bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-full flex items-center justify-center text-xl">
+                                        {journeyQuotes[currentQuote].avatar}
+                                    </div>
+                                    <div className="text-left">
+                                        <p className="text-purple-300 font-medium">{journeyQuotes[currentQuote].author}</p>
+                                        <p className="text-gray-400 text-sm">{journeyQuotes[currentQuote].role}</p>
+                                        <p className="text-gray-500 text-xs">{journeyQuotes[currentQuote].date}</p>
+                                    </div>
+                                </div>
+
+                                {/* Progress indicator */}
+                                <div className="mt-6 flex justify-center space-x-2">
+                                    {journeyQuotes.map((_, index) => (
+                                        <button
+                                            key={index}
+                                            onClick={() => setCurrentQuote(index)}
+                                            className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                                                index === currentQuote ? 'bg-purple-400 w-8' : 'bg-gray-600 hover:bg-gray-500'
+                                            }`}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* All Quotes List */}
+                        <div className="space-y-4">
+                            <h3 className="text-xl text-white font-light">Semua Momen</h3>
+                            {journeyQuotes.map((quote, index) => (
+                                <div
+                                    key={quote.id}
+                                    onClick={() => setCurrentQuote(index)}
+                                    className={`p-4 rounded-lg cursor-pointer transition-all duration-300 ${
+                                        index === currentQuote
+                                            ? 'bg-purple-600/20 border border-purple-400/50'
+                                            : 'bg-gray-800/30 hover:bg-gray-800/50 border border-gray-700/30'
+                                    }`}
+                                >
+                                    <div className="flex items-start space-x-4">
+                                        <div className="w-12 h-12 bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-full flex items-center justify-center text-lg flex-shrink-0">
+                                            {quote.avatar}
+                                        </div>
+                                        <div className="flex-1">
+                                            <p className="text-gray-300 text-sm mb-2 line-clamp-2">&#34;{quote.quote}&#34;</p>
+                                            <div className="flex items-center justify-between">
+                                                <div>
+                                                    <p className="text-purple-300 text-sm font-medium">{quote.author}</p>
+                                                    <p className="text-gray-500 text-xs">{quote.role}</p>
+                                                </div>
+                                                <p className="text-gray-500 text-xs">{quote.date}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                );
+        }
+    };
+
+    return (
+        <div className="min-h-screen bg-gray-950 flex">
+            {/* Sidebar */}
+            <div className="w-80 bg-gray-900 border-r border-gray-800 flex flex-col">
+                {/* Header */}
+                <div className="p-6 border-b border-gray-800">
+                    <div className="flex items-center space-x-3 mb-6">
+                        <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center">
+                            <Crown className="w-6 h-6 text-white" />
+                        </div>
+                        <div>
+                            <h1 className="text-2xl font-light text-white">ANANKA</h1>
+                            <p className="text-gray-400 text-sm">Wedding Marketplace</p>
+                        </div>
+                    </div>
+
+                    {/* Status */}
+                    <div className="bg-purple-600/20 border border-purple-500/30 rounded-lg px-4 py-2">
+                        <div className="flex items-center space-x-2">
+                            <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
+                            <span className="text-purple-200 text-sm">DALAM PENGEMBANGAN</span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Navigation */}
+                <div className="flex-1 p-6">
+                    <div className="space-y-2">
+                        {menuItems.map((item) => {
+                            const IconComponent = item.icon;
+                            return (
+                                <button
+                                    key={item.id}
+                                    onClick={() => setActiveSection(item.id)}
+                                    className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-all duration-200 ${
+                                        activeSection === item.id
+                                            ? 'bg-purple-600/20 border border-purple-500/30 text-white'
+                                            : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
+                                    }`}
+                                >
+                                    <IconComponent className="w-5 h-5" />
+                                    <span className="font-medium">{item.label}</span>
+                                    <span className="ml-auto text-xs bg-gray-700 px-2 py-1 rounded">
+                                        {item.count}
+                                    </span>
+                                </button>
+                            );
+                        })}
                     </div>
                 </div>
 
                 {/* Footer */}
-                <footer className="relative z-20 py-6">
+                <div className="p-6 border-t border-gray-800">
                     <div className="text-center">
-                        <p className="text-gray-600 text-xs font-light">
-                            © 2025 ANANKA • Made with ❤️ for Perfect Weddings
+                        <p className="text-gray-500 text-xs">
+                            © 2025 ANANKA
+                        </p>
+                        <p className="text-gray-600 text-xs">
+                            Made with ❤️ for Perfect Weddings
                         </p>
                     </div>
-                </footer>
+                </div>
+            </div>
+
+            {/* Main Content */}
+            <div className="flex-1 overflow-y-auto">
+                <div className="p-8">
+                    {renderMainContent()}
+                </div>
+            </div>
+
+            {/* Background Effects */}
+            <div className="absolute inset-0 pointer-events-none z-0">
+                <div className="absolute top-0 left-1/3 w-96 h-96 bg-purple-800 rounded-full mix-blend-multiply filter blur-3xl opacity-10"></div>
+                <div className="absolute bottom-0 right-1/3 w-96 h-96 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-10"></div>
             </div>
         </div>
     );
