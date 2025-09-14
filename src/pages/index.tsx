@@ -175,13 +175,13 @@ const AnankaMerdekaLanding = () => {
         switch (activeSection) {
             case 'team':
                 return (
-                    <div className="flex items-center justify-center min-h-[80vh]">
-                        <div className="max-w-6xl mx-auto">
-                            <div className="bg-gradient-to-r from-purple-900/30 to-blue-900/30 rounded-3xl p-6 md:p-12 border border-purple-500/20 backdrop-blur-sm">
-                                <div className="flex flex-col lg:flex-row items-center lg:items-center space-y-8 lg:space-y-0 lg:space-x-12">
+                    <div className="flex items-center justify-center min-h-[80vh] px-2 sm:px-4">
+                        <div className="max-w-6xl mx-auto w-full">
+                            <div className="bg-gradient-to-r from-purple-900/30 to-blue-900/30 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-12 border border-purple-500/20 backdrop-blur-sm">
+                                <div className="flex flex-col lg:flex-row items-center lg:items-center space-y-6 sm:space-y-8 lg:space-y-0 lg:space-x-12">
                                     {/* Avatar */}
                                     <div className="relative flex-shrink-0">
-                                        <div className="w-60 h-60 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-purple-400/30 shadow-2xl">
+                                        <div className="w-48 h-48 sm:w-60 sm:h-60 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-purple-400/30 shadow-2xl">
                                             <img
                                                 src={teamMembers[currentTeamMember].avatar}
                                                 alt={teamMembers[currentTeamMember].name}
@@ -191,20 +191,20 @@ const AnankaMerdekaLanding = () => {
                                     </div>
 
                                     {/* Info */}
-                                    <div className="flex-1 text-center lg:text-left max-w-2xl">
-                                        <h2 className="text-3xl md:text-5xl lg:text-6xl font-light text-white mb-4 leading-tight">
+                                    <div className="flex-1 text-center lg:text-left max-w-2xl w-full px-2 sm:px-0">
+                                        <h2 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-light text-white mb-3 sm:mb-4 leading-tight">
                                             {teamMembers[currentTeamMember].name}
                                         </h2>
-                                        <p className="text-purple-300 text-xl md:text-2xl lg:text-3xl mb-6 font-light">
+                                        <p className="text-purple-300 text-lg sm:text-xl md:text-2xl lg:text-3xl mb-4 sm:mb-6 font-light">
                                             {teamMembers[currentTeamMember].role}
                                         </p>
-                                        <p className="text-gray-200 text-base md:text-xl leading-relaxed mb-8">
+                                        <p className="text-gray-200 text-sm sm:text-base md:text-xl leading-relaxed mb-6 sm:mb-8">
                                             {teamMembers[currentTeamMember].description}
                                         </p>
 
                                         {/* Skills */}
-                                        <div className="mb-8">
-                                            <p className="text-gray-300 text-base md:text-lg mb-4 font-light">Keahlian & Teknologi:</p>
+                                        <div className="mb-6 sm:mb-8">
+                                            <p className="text-gray-300 text-sm sm:text-base md:text-lg mb-3 sm:mb-4 font-light">Keahlian & Teknologi:</p>
                                             <div className="flex flex-wrap gap-2 md:gap-3 justify-center lg:justify-start">
                                                 {teamMembers[currentTeamMember].skills.map((skill, index) => (
                                                     <span
@@ -274,15 +274,15 @@ const AnankaMerdekaLanding = () => {
 
             case 'gallery':
                 return (
-                    <div className="space-y-8">
-                        <div>
-                            <h2 className="text-3xl md:text-4xl font-light bg-gradient-to-r from-purple-400 to-white bg-clip-text text-transparent mb-2">
+                    <div className="space-y-6 sm:space-y-8">
+                        <div className="px-2 sm:px-0">
+                            <h2 className="text-2xl sm:text-3xl md:text-4xl font-light bg-gradient-to-r from-purple-400 to-white bg-clip-text text-transparent mb-2">
                                 Galeri Momen
                             </h2>
                             <p className="text-gray-400">Dokumentasi perjalanan pengembangan Ananka</p>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 px-2 sm:px-0">
                             {galleryItems.map((item) => (
                                 <div
                                     key={item.id}
@@ -318,40 +318,40 @@ const AnankaMerdekaLanding = () => {
 
             default: // journey
                 return (
-                    <div className="space-y-8">
-                        <div>
-                            <h2 className="text-3xl md:text-4xl font-light bg-gradient-to-r from-purple-400 to-white bg-clip-text text-transparent mb-2">
+                    <div className="space-y-6 sm:space-y-8">
+                        <div className="px-2 sm:px-0">
+                            <h2 className="text-2xl sm:text-3xl md:text-4xl font-light bg-gradient-to-r from-purple-400 to-white bg-clip-text text-transparent mb-2">
                                 Jejak Perjalanan
                             </h2>
                             <p className="text-gray-400">Dari ide hingga menjadi kenyataan</p>
                         </div>
 
                         {/* Current Quote Display */}
-                        <div className="bg-gradient-to-r from-purple-900/20 to-blue-900/20 rounded-2xl p-6 md:p-8 border border-purple-500/20">
+                        <div className="bg-gradient-to-r from-purple-900/20 to-blue-900/20 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 border border-purple-500/20 mx-2 sm:mx-0">
                             <div className="text-center">
-                                <Quote className="w-8 h-8 md:w-12 md:h-12 text-purple-400/50 mx-auto mb-6" />
-                                <p className="text-lg md:text-xl lg:text-2xl text-gray-200 font-light leading-relaxed italic mb-6 max-w-4xl mx-auto">
+                                <Quote className="w-6 h-6 sm:w-8 sm:h-8 md:w-12 md:h-12 text-purple-400/50 mx-auto mb-4 sm:mb-6" />
+                                <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-200 font-light leading-relaxed italic mb-4 sm:mb-6 max-w-4xl mx-auto px-2">
                                     &#34;{journeyQuotes[currentQuote].quote}&#34;
                                 </p>
-                                <div className="flex items-center justify-center space-x-4">
-                                    <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-full flex items-center justify-center text-lg md:text-xl">
+                                <div className="flex items-center justify-center space-x-3 sm:space-x-4">
+                                    <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-full flex items-center justify-center text-base sm:text-lg md:text-xl">
                                         {journeyQuotes[currentQuote].avatar}
                                     </div>
                                     <div className="text-left">
-                                        <p className="text-purple-300 font-medium text-sm md:text-base">{journeyQuotes[currentQuote].author}</p>
+                                        <p className="text-purple-300 font-medium text-xs sm:text-sm md:text-base">{journeyQuotes[currentQuote].author}</p>
                                         <p className="text-gray-400 text-xs md:text-sm">{journeyQuotes[currentQuote].role}</p>
                                         <p className="text-gray-500 text-xs">{journeyQuotes[currentQuote].date}</p>
                                     </div>
                                 </div>
 
                                 {/* Progress indicator */}
-                                <div className="mt-6 flex justify-center space-x-2">
+                                <div className="mt-4 sm:mt-6 flex justify-center space-x-2">
                                     {journeyQuotes.map((_, index) => (
                                         <button
                                             key={index}
                                             onClick={() => setCurrentQuote(index)}
                                             className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                                                index === currentQuote ? 'bg-purple-400 w-8' : 'bg-gray-600 hover:bg-gray-500'
+                                                index === currentQuote ? 'bg-purple-400 w-6 sm:w-8' : 'bg-gray-600 hover:bg-gray-500'
                                             }`}
                                         />
                                     ))}
@@ -360,8 +360,8 @@ const AnankaMerdekaLanding = () => {
                         </div>
 
                         {/* All Quotes List */}
-                        <div className="space-y-4">
-                            <h3 className="text-lg md:text-xl text-white font-light">Semua Momen</h3>
+                        <div className="space-y-3 sm:space-y-4 px-2 sm:px-0">
+                            <h3 className="text-base sm:text-lg md:text-xl text-white font-light">Semua Momen</h3>
                             {journeyQuotes.map((quote, index) => (
                                 <div
                                     key={quote.id}
@@ -373,11 +373,11 @@ const AnankaMerdekaLanding = () => {
                                     }`}
                                 >
                                     <div className="flex items-start space-x-3 md:space-x-4">
-                                        <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-full flex items-center justify-center text-base md:text-lg flex-shrink-0">
+                                        <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-full flex items-center justify-center text-sm sm:text-base md:text-lg flex-shrink-0">
                                             {quote.avatar}
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <p className="text-gray-300 text-sm mb-2 break-words">&#34;{quote.quote}&#34;</p>
+                                            <p className="text-gray-300 text-xs sm:text-sm mb-2 break-words">&#34;{quote.quote}&#34;</p>
                                             <div className="flex items-center justify-between">
                                                 <div className="min-w-0 flex-1">
                                                     <p className="text-purple-300 text-xs md:text-sm font-medium truncate">{quote.author}</p>
@@ -459,10 +459,54 @@ const AnankaMerdekaLanding = () => {
     );
 
     return (
-        <div className="min-h-screen bg-gray-950 flex relative">
+        <div
+            className="min-h-screen bg-gray-950 w-full overflow-x-hidden"
+            style={{
+                margin: 0,
+                padding: 0,
+                boxSizing: 'border-box',
+                maxWidth: '100vw',
+                position: 'relative'
+            }}
+        >
+            {/* CSS Reset */}
+            <style jsx>{`
+                * {
+                    box-sizing: border-box;
+                    margin: 0;
+                    padding: 0;
+                }
+                
+                html, body {
+                    margin: 0 !important;
+                    padding: 0 !important;
+                    width: 100% !important;
+                    overflow-x: hidden !important;
+                }
+                
+                .mobile-container {
+                    width: 100vw !important;
+                    max-width: 100vw !important;
+                    overflow-x: hidden !important;
+                    box-sizing: border-box !important;
+                }
+                
+                @media (max-width: 1023px) {
+                    .desktop-only {
+                        display: none !important;
+                    }
+                }
+                
+                @media (min-width: 1024px) {
+                    .mobile-only {
+                        display: none !important;
+                    }
+                }
+            `}</style>
+
             {/* Mobile Header */}
-            <div className="lg:hidden fixed top-0 left-0 right-0 bg-gray-900 border-b border-gray-800 z-50">
-                <div className="flex items-center justify-between p-4">
+            <div className="mobile-only fixed top-0 left-0 w-full bg-gray-900 border-b border-gray-800 z-50">
+                <div className="flex items-center justify-between px-6 py-4 w-full max-w-full">
                     <div className="flex items-center space-x-3">
                         <div className="w-8 h-8 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center">
                             <Crown className="w-4 h-4 text-white" />
@@ -480,27 +524,43 @@ const AnankaMerdekaLanding = () => {
                 </div>
             </div>
 
-            {/* Desktop Sidebar */}
-            <div className="hidden lg:flex w-80 bg-gray-900 border-r border-gray-800 flex-col">
-                <SidebarContent />
+            {/* Desktop Layout */}
+            <div className="desktop-only flex min-h-screen w-full">
+                {/* Desktop Sidebar */}
+                <div className="w-80 bg-gray-900 border-r border-gray-800 flex flex-col flex-shrink-0">
+                    <SidebarContent />
+                </div>
+
+                {/* Desktop Main Content */}
+                <div className="flex-1 overflow-y-auto">
+                    <div className="p-8">
+                        {renderMainContent()}
+                    </div>
+                </div>
+            </div>
+
+            {/* Mobile Layout */}
+            <div className="mobile-only mobile-container min-h-screen" style={{ paddingTop: '80px' }}>
+                <div className="px-6 py-4 w-full">
+                    {renderMainContent()}
+                </div>
             </div>
 
             {/* Mobile Sidebar Overlay */}
             {isMobileMenuOpen && (
-                <div className="lg:hidden fixed inset-0 z-40">
+                <div className="mobile-only fixed inset-0 z-40">
                     <div
                         className="absolute inset-0 bg-black bg-opacity-50"
                         onClick={() => setIsMobileMenuOpen(false)}
                     ></div>
                     <div className="absolute top-0 left-0 bottom-0 w-80 max-w-[85vw] bg-gray-900 border-r border-gray-800 flex flex-col">
-                        <div className="flex items-center justify-between p-4 border-b border-gray-800">
+                        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800">
                             <div className="flex items-center space-x-3">
                                 <div className="w-8 h-8 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center">
                                     <Crown className="w-4 h-4 text-white" />
                                 </div>
                                 <div>
                                     <h1 className="text-lg font-light text-white">ANANKA</h1>
-                                    <p className="text-gray-400 text-xs">Wedding Marketplace</p>
                                 </div>
                             </div>
                             <button
@@ -514,13 +574,6 @@ const AnankaMerdekaLanding = () => {
                     </div>
                 </div>
             )}
-
-            {/* Main Content */}
-            <div className="flex-1 overflow-y-auto pt-16 lg:pt-0">
-                <div className="p-4 md:p-6 lg:p-8">
-                    {renderMainContent()}
-                </div>
-            </div>
 
             {/* Background Effects */}
             <div className="absolute inset-0 pointer-events-none z-0">
