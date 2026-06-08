@@ -86,7 +86,7 @@ function ParticleCanvas() {
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(212,175,130,${0.06 * (1 - dist / 120)})`;
+            ctx.strokeStyle = `rgba(212,175,130,${0.2 * (1 - dist / 120)})`;
             ctx.lineWidth = 0.5;
             ctx.stroke();
           }
@@ -145,7 +145,7 @@ function CountdownRing({
           </defs>
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-3xl font-light tracking-tight" style={{ color: "#e8ddd0", fontFamily: "'Inter', sans-serif" }}>
+          <span className="text-3xl font-light tracking-tight" style={{ color: "#1c1917", fontFamily: "'Outfit', sans-serif" }}>
             {String(value).padStart(2, "0")}
           </span>
         </div>
@@ -168,7 +168,7 @@ function CountdownRing({
           </defs>
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-lg font-light tracking-tight" style={{ color: "#e8ddd0", fontFamily: "'Inter', sans-serif" }}>
+          <span className="text-lg font-light tracking-tight" style={{ color: "#1c1917", fontFamily: "'Outfit', sans-serif" }}>
             {String(value).padStart(2, "0")}
           </span>
         </div>
@@ -177,7 +177,7 @@ function CountdownRing({
         className="mt-1.5 sm:mt-2 text-[10px] sm:text-xs uppercase tracking-[0.2em]"
         style={{
           color: "rgba(212,175,130,0.6)",
-          fontFamily: "'Inter', sans-serif",
+          fontFamily: "'Outfit', sans-serif",
         }}
       >
         {label}
@@ -214,7 +214,7 @@ function FeatureCard({
       <div
         className="relative rounded-2xl p-6 sm:p-8 h-full transition-all duration-500"
         style={{
-          background: "rgba(18,15,12,0.7)",
+          background: "rgba(255,255,255,0.8)",
           backdropFilter: "blur(20px)",
         }}
       >
@@ -239,15 +239,15 @@ function FeatureCard({
           </div>
           <h3
             className="text-lg font-medium mb-3"
-            style={{ color: "#e8ddd0", fontFamily: "'Inter', sans-serif" }}
+            style={{ color: "#1c1917", fontFamily: "'Outfit', sans-serif" }}
           >
             {title}
           </h3>
           <p
             className="text-sm leading-relaxed"
             style={{
-              color: "rgba(200,190,180,0.6)",
-              fontFamily: "'Inter', sans-serif",
+              color: "rgba(28,25,23,0.7)",
+              fontFamily: "'Outfit', sans-serif",
             }}
           >
             {description}
@@ -354,17 +354,17 @@ export default function Home() {
   // Color palette constants
   const GOLD = "#d4af82";
   const GOLD_LIGHT = "#e8c9a0";
-  const TEXT_PRIMARY = "#e8ddd0";
-  const TEXT_SECONDARY = "rgba(200,190,180,0.6)";
-  const BG_DARK = "#0c0a08";
+  const TEXT_PRIMARY = "#1c1917";
+  const TEXT_SECONDARY = "rgba(28,25,23,0.7)";
+  const BG_LIGHT = "#faf9f6";
 
   return (
     <div
       className="overflow-x-hidden"
       style={{
-        background: BG_DARK,
+        background: BG_LIGHT,
         color: TEXT_PRIMARY,
-        fontFamily: "'Inter', sans-serif",
+        fontFamily: "'Outfit', sans-serif",
       }}
     >
       <Head>
@@ -386,7 +386,7 @@ export default function Home() {
       <nav
         className="fixed top-0 w-full z-50 transition-all duration-500"
         style={{
-          background: scrollY > 50 ? "rgba(12,10,8,0.85)" : "transparent",
+          background: scrollY > 50 ? "rgba(250,249,246,0.85)" : "transparent",
           backdropFilter: scrollY > 50 ? "blur(20px)" : "none",
           borderBottom:
             scrollY > 50
@@ -405,7 +405,7 @@ export default function Home() {
               alt="Ananka Logo"
               className="h-8 md:h-9 w-auto"
               style={{
-                filter: "brightness(0) invert(92%) sepia(10%) saturate(300%) hue-rotate(15deg) brightness(1.02)",
+                filter: "brightness(0) opacity(0.85)",
               }}
             />
             <span
@@ -426,7 +426,7 @@ export default function Home() {
                 style={{
                   color: activeSection === section ? GOLD : TEXT_SECONDARY,
                   fontWeight: activeSection === section ? 500 : 400,
-                  fontFamily: "'Inter', sans-serif",
+                  fontFamily: "'Outfit', sans-serif",
                 }}
               >
                 {section}
@@ -479,7 +479,7 @@ export default function Home() {
           className="md:hidden overflow-hidden transition-all duration-400"
           style={{
             maxHeight: isMenuOpen ? "320px" : "0",
-            background: "rgba(12,10,8,0.95)",
+            background: "rgba(250,249,246,0.95)",
             backdropFilter: "blur(20px)",
           }}
         >
@@ -491,7 +491,7 @@ export default function Home() {
                 className="text-left capitalize text-sm tracking-wide transition-all duration-300"
                 style={{
                   color: activeSection === section ? GOLD : TEXT_SECONDARY,
-                  fontFamily: "'Inter', sans-serif",
+                  fontFamily: "'Outfit', sans-serif",
                 }}
               >
                 {section}
@@ -532,7 +532,7 @@ export default function Home() {
                 color: GOLD,
                 border: `1px solid rgba(212,175,130,0.2)`,
                 background: "rgba(212,175,130,0.05)",
-                fontFamily: "'Inter', sans-serif",
+                fontFamily: "'Outfit', sans-serif",
               }}
             >
               Coming 2027
@@ -541,9 +541,9 @@ export default function Home() {
 
           {/* Heading */}
           <h1
-            className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-normal mb-6 leading-[1.1]"
+            className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-medium mb-6 leading-[1.1]"
             style={{
-              fontFamily: "'Playfair Display', serif",
+              fontFamily: "'Outfit', sans-serif",
               color: TEXT_PRIMARY,
               opacity: mounted ? 1 : 0,
               transform: mounted ? "translateY(0)" : "translateY(20px)",
@@ -570,7 +570,7 @@ export default function Home() {
             className="text-base md:text-lg max-w-xl mx-auto mb-10 leading-relaxed"
             style={{
               color: TEXT_SECONDARY,
-              fontFamily: "'Inter', sans-serif",
+              fontFamily: "'Outfit', sans-serif",
               fontWeight: 300,
               opacity: mounted ? 1 : 0,
               transform: mounted ? "translateY(0)" : "translateY(20px)",
@@ -595,8 +595,8 @@ export default function Home() {
               className="group relative px-8 py-3.5 rounded-full text-sm font-medium tracking-wide overflow-hidden transition-all duration-500"
               style={{
                 background: `linear-gradient(135deg, ${GOLD}, ${GOLD_LIGHT})`,
-                color: BG_DARK,
-                fontFamily: "'Inter', sans-serif",
+                color: BG_LIGHT,
+                fontFamily: "'Outfit', sans-serif",
               }}
             >
               <span className="relative z-10">Get Notified</span>
@@ -613,7 +613,7 @@ export default function Home() {
               style={{
                 color: GOLD,
                 border: `1px solid rgba(212,175,130,0.25)`,
-                fontFamily: "'Inter', sans-serif",
+                fontFamily: "'Outfit', sans-serif",
               }}
             >
               Learn More
@@ -632,7 +632,7 @@ export default function Home() {
               className="text-xs uppercase tracking-[0.25em] mb-6"
               style={{
                 color: TEXT_SECONDARY,
-                fontFamily: "'Inter', sans-serif",
+                fontFamily: "'Outfit', sans-serif",
               }}
             >
               Launching in
@@ -704,14 +704,14 @@ export default function Home() {
             <div className="text-center mb-16">
               <span
                 className="text-xs uppercase tracking-[0.3em] mb-4 block"
-                style={{ color: GOLD, fontFamily: "'Inter', sans-serif" }}
+                style={{ color: GOLD, fontFamily: "'Outfit', sans-serif" }}
               >
                 Our Story
               </span>
               <h2
                 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal"
                 style={{
-                  fontFamily: "'Playfair Display', serif",
+                  fontFamily: "'Outfit', sans-serif",
                   color: TEXT_PRIMARY,
                 }}
               >
@@ -728,7 +728,7 @@ export default function Home() {
               <h3
                 className="text-xl md:text-2xl font-normal"
                 style={{
-                  fontFamily: "'Playfair Display', serif",
+                  fontFamily: "'Outfit', sans-serif",
                   color: TEXT_PRIMARY,
                 }}
               >
@@ -740,7 +740,7 @@ export default function Home() {
                 className="text-sm leading-[1.8]"
                 style={{
                   color: TEXT_SECONDARY,
-                  fontFamily: "'Inter', sans-serif",
+                  fontFamily: "'Outfit', sans-serif",
                   fontWeight: 300,
                 }}
               >
@@ -755,7 +755,7 @@ export default function Home() {
                 className="text-sm leading-[1.8]"
                 style={{
                   color: TEXT_SECONDARY,
-                  fontFamily: "'Inter', sans-serif",
+                  fontFamily: "'Outfit', sans-serif",
                   fontWeight: 300,
                 }}
               >
@@ -770,7 +770,7 @@ export default function Home() {
                 <button
                   onClick={() => scrollToSection("features")}
                   className="group inline-flex items-center gap-2 text-sm tracking-wide transition-all duration-300"
-                  style={{ color: GOLD, fontFamily: "'Inter', sans-serif" }}
+                  style={{ color: GOLD, fontFamily: "'Outfit', sans-serif" }}
                 >
                   Explore Features
                   <svg
@@ -800,7 +800,7 @@ export default function Home() {
                     className="text-xs tracking-wide"
                     style={{
                       color: TEXT_SECONDARY,
-                      fontFamily: "'Inter', sans-serif",
+                      fontFamily: "'Outfit', sans-serif",
                     }}
                   >
                     by{" "}
@@ -834,14 +834,14 @@ export default function Home() {
             <div className="text-center mb-10 sm:mb-16">
               <span
                 className="text-xs uppercase tracking-[0.3em] mb-4 block"
-                style={{ color: GOLD, fontFamily: "'Inter', sans-serif" }}
+                style={{ color: GOLD, fontFamily: "'Outfit', sans-serif" }}
               >
                 Features
               </span>
               <h2
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal mb-4"
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium mb-4"
                 style={{
-                  fontFamily: "'Playfair Display', serif",
+                  fontFamily: "'Outfit', sans-serif",
                   color: TEXT_PRIMARY,
                 }}
               >
@@ -854,7 +854,7 @@ export default function Home() {
                 className="text-sm max-w-lg mx-auto leading-relaxed"
                 style={{
                   color: TEXT_SECONDARY,
-                  fontFamily: "'Inter', sans-serif",
+                  fontFamily: "'Outfit', sans-serif",
                   fontWeight: 300,
                 }}
               >
@@ -936,16 +936,16 @@ export default function Home() {
           <Reveal>
             <span
               className="text-xs uppercase tracking-[0.3em] mb-4 block"
-              style={{ color: GOLD, fontFamily: "'Inter', sans-serif" }}
+              style={{ color: GOLD, fontFamily: "'Outfit', sans-serif" }}
             >
               Stay Updated
             </span>
           </Reveal>
           <Reveal delay={100}>
             <h2
-              className="text-3xl sm:text-4xl md:text-5xl font-normal mb-4"
+              className="text-3xl sm:text-4xl md:text-5xl font-medium mb-4"
               style={{
-                fontFamily: "'Playfair Display', serif",
+                fontFamily: "'Outfit', sans-serif",
                 color: TEXT_PRIMARY,
               }}
             >
@@ -960,7 +960,7 @@ export default function Home() {
               className="text-sm mb-10 leading-relaxed"
               style={{
                 color: TEXT_SECONDARY,
-                fontFamily: "'Inter', sans-serif",
+                fontFamily: "'Outfit', sans-serif",
                 fontWeight: 300,
               }}
             >
@@ -984,7 +984,7 @@ export default function Home() {
                   background: "rgba(212,175,130,0.06)",
                   border: "1px solid rgba(212,175,130,0.15)",
                   color: TEXT_PRIMARY,
-                  fontFamily: "'Inter', sans-serif",
+                  fontFamily: "'Outfit', sans-serif",
                 }}
                 onFocus={(e) => {
                   e.currentTarget.style.borderColor = "rgba(212,175,130,0.4)";
@@ -1001,8 +1001,8 @@ export default function Home() {
                 className="px-7 py-3 rounded-full text-sm font-medium tracking-wide transition-all duration-500 hover:shadow-lg"
                 style={{
                   background: `linear-gradient(135deg, ${GOLD}, ${GOLD_LIGHT})`,
-                  color: BG_DARK,
-                  fontFamily: "'Inter', sans-serif",
+                  color: BG_LIGHT,
+                  fontFamily: "'Outfit', sans-serif",
                 }}
               >
                 Notify Me
@@ -1016,7 +1016,7 @@ export default function Home() {
                   background: "rgba(212,175,130,0.08)",
                   border: "1px solid rgba(212,175,130,0.2)",
                   color: GOLD_LIGHT,
-                  fontFamily: "'Inter', sans-serif",
+                  fontFamily: "'Outfit', sans-serif",
                   animation: "fadeIn 0.5s ease",
                 }}
               >
@@ -1037,16 +1037,16 @@ export default function Home() {
           <Reveal>
             <span
               className="text-xs uppercase tracking-[0.3em] mb-4 block"
-              style={{ color: GOLD, fontFamily: "'Inter', sans-serif" }}
+              style={{ color: GOLD, fontFamily: "'Outfit', sans-serif" }}
             >
               Contact
             </span>
           </Reveal>
           <Reveal delay={100}>
             <h2
-              className="text-3xl sm:text-4xl md:text-5xl font-normal mb-4"
+              className="text-3xl sm:text-4xl md:text-5xl font-medium mb-4"
               style={{
-                fontFamily: "'Playfair Display', serif",
+                fontFamily: "'Outfit', sans-serif",
                 color: TEXT_PRIMARY,
               }}
             >
@@ -1061,7 +1061,7 @@ export default function Home() {
               className="text-sm mb-10 leading-relaxed"
               style={{
                 color: TEXT_SECONDARY,
-                fontFamily: "'Inter', sans-serif",
+                fontFamily: "'Outfit', sans-serif",
                 fontWeight: 300,
               }}
             >
@@ -1120,7 +1120,7 @@ export default function Home() {
               className="text-sm"
               style={{
                 color: TEXT_SECONDARY,
-                fontFamily: "'Inter', sans-serif",
+                fontFamily: "'Outfit', sans-serif",
               }}
             >
               Email us at{" "}
@@ -1150,7 +1150,7 @@ export default function Home() {
         <div className="max-w-5xl mx-auto flex justify-center items-center">
           <p
             className="text-xs tracking-wide"
-            style={{ color: TEXT_SECONDARY, fontFamily: "'Inter', sans-serif" }}
+            style={{ color: TEXT_SECONDARY, fontFamily: "'Outfit', sans-serif" }}
           >
             © {new Date().getFullYear()} Ananka. All rights reserved.
           </p>
@@ -1161,7 +1161,7 @@ export default function Home() {
       <style jsx global>{`
         ::selection {
           background: rgba(212, 175, 130, 0.3);
-          color: #e8ddd0;
+          color: #1c1917;
         }
 
         ::placeholder {
@@ -1178,7 +1178,7 @@ export default function Home() {
           width: 4px;
         }
         ::-webkit-scrollbar-track {
-          background: #0c0a08;
+          background: #faf9f6;
         }
         ::-webkit-scrollbar-thumb {
           background: rgba(212, 175, 130, 0.2);
@@ -1220,7 +1220,7 @@ export default function Home() {
 
         /* Override dark mode colors from globals.css */
         body {
-          background: #0c0a08 !important;
+          background: #faf9f6 !important;
         }
       `}</style>
     </div>
