@@ -375,7 +375,7 @@ export default function Home() {
         />
         <link rel="icon" href="/favicon.ico" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
       </Head>
@@ -397,15 +397,22 @@ export default function Home() {
       >
         <div className="max-w-6xl mx-auto px-6 md:px-8 flex justify-between items-center">
           <div
-            className="cursor-pointer transition-all duration-300 hover:opacity-80"
+            className="cursor-pointer transition-all duration-300 hover:opacity-80 flex items-center gap-0"
             onClick={() => scrollToSection("home")}
-            style={{ fontFamily: "'Playfair Display', serif" }}
           >
+            <img
+              src="/images/logo_ananka.png"
+              alt="Ananka Logo"
+              className="h-8 md:h-9 w-auto"
+              style={{
+                filter: "brightness(0) invert(92%) sepia(10%) saturate(300%) hue-rotate(15deg) brightness(1.02)",
+              }}
+            />
             <span
-              className="italic text-2xl md:text-3xl font-normal tracking-wide"
-              style={{ color: TEXT_PRIMARY }}
+              className="text-2xl md:text-3xl font-semibold tracking-wide lowercase"
+              style={{ color: TEXT_PRIMARY, fontFamily: "'Outfit', sans-serif", marginLeft: "-1px" }}
             >
-              ananka
+              nanka
             </span>
           </div>
 
