@@ -21,95 +21,6 @@ function useInView(threshold = 0.15) {
   return { ref, inView };
 }
 
-// ─── Particle Canvas Background ───
-function ParticleCanvas() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    let animId: number;
-    const particles: {
-      x: number;
-      y: number;
-      vx: number;
-      vy: number;
-      r: number;
-      o: number;
-    }[] = [];
-
-    const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-    resize();
-    window.addEventListener("resize", resize);
-
-    const COUNT = 60;
-    for (let i = 0; i < COUNT; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: (Math.random() - 0.5) * 0.3,
-        r: Math.random() * 1.5 + 0.5,
-        o: Math.random() * 0.4 + 0.1,
-      });
-    }
-
-    const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach((p) => {
-        p.x += p.vx;
-        p.y += p.vy;
-        if (p.x < 0) p.x = canvas.width;
-        if (p.x > canvas.width) p.x = 0;
-        if (p.y < 0) p.y = canvas.height;
-        if (p.y > canvas.height) p.y = 0;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(212,175,130,${p.o})`;
-        ctx.fill();
-      });
-
-      // Draw connections
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 120) {
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(212,175,130,${0.2 * (1 - dist / 120)})`;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
-          }
-        }
-      }
-      animId = requestAnimationFrame(draw);
-    };
-    draw();
-    return () => {
-      cancelAnimationFrame(animId);
-      window.removeEventListener("resize", resize);
-    };
-  }, []);
-
-  return (
-    <canvas
-      ref={canvasRef}
-      className="fixed inset-0 pointer-events-none"
-      style={{ zIndex: 0 }}
-    />
-  );
-}
-
 // ─── Countdown Ring ───
 function CountdownRing({
   value,
@@ -121,31 +32,25 @@ function CountdownRing({
   label: string;
 }) {
   const radius = 40;
-  const stroke = 3;
+  const stroke = 2; // thinner for premium feel
   const circumference = 2 * Math.PI * radius;
   const progress = circumference - (value / max) * circumference;
 
   return (
     <div className="flex flex-col items-center">
       {/* Desktop size */}
-      <div className="relative hidden sm:block" style={{ width: 96, height: 96 }}>
+      <div className="relative hidden sm:block" style={{ width: 80, height: 80 }}>
         <svg
-          width="96"
-          height="96"
+          width="80"
+          height="80"
           viewBox="0 0 96 96"
           className="transform -rotate-90"
         >
-          <circle cx="48" cy="48" r={radius} fill="none" stroke="rgba(212,175,130,0.12)" strokeWidth={stroke} />
-          <circle cx="48" cy="48" r={radius} fill="none" stroke="url(#gold-gradient)" strokeWidth={stroke} strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={progress} style={{ transition: "stroke-dashoffset 0.6s ease" }} />
-          <defs>
-            <linearGradient id="gold-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#d4af82" />
-              <stop offset="100%" stopColor="#e8c9a0" />
-            </linearGradient>
-          </defs>
+          <circle cx="48" cy="48" r={radius} fill="none" stroke="rgba(44,44,29,0.06)" strokeWidth={stroke} />
+          <circle cx="48" cy="48" r={radius} fill="none" stroke="#2c2c1d" strokeWidth={stroke} strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={progress} style={{ transition: "stroke-dashoffset 0.6s ease" }} />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-3xl font-light tracking-tight" style={{ color: "#1c1917", fontFamily: "'Outfit', sans-serif" }}>
+          <span className="text-2xl font-bold tracking-tight text-primary font-heading">
             {String(value).padStart(2, "0")}
           </span>
         </div>
@@ -158,28 +63,16 @@ function CountdownRing({
           viewBox="0 0 64 64"
           className="transform -rotate-90"
         >
-          <circle cx="32" cy="32" r={26} fill="none" stroke="rgba(212,175,130,0.12)" strokeWidth={2} />
-          <circle cx="32" cy="32" r={26} fill="none" stroke="url(#gold-gradient-sm)" strokeWidth={2} strokeLinecap="round" strokeDasharray={2 * Math.PI * 26} strokeDashoffset={2 * Math.PI * 26 - (value / max) * 2 * Math.PI * 26} style={{ transition: "stroke-dashoffset 0.6s ease" }} />
-          <defs>
-            <linearGradient id="gold-gradient-sm" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#d4af82" />
-              <stop offset="100%" stopColor="#e8c9a0" />
-            </linearGradient>
-          </defs>
+          <circle cx="32" cy="32" r={26} fill="none" stroke="rgba(44,44,29,0.06)" strokeWidth={1.5} />
+          <circle cx="32" cy="32" r={26} fill="none" stroke="#2c2c1d" strokeWidth={1.5} strokeLinecap="round" strokeDasharray={2 * Math.PI * 26} strokeDashoffset={2 * Math.PI * 26 - (value / max) * 2 * Math.PI * 26} style={{ transition: "stroke-dashoffset 0.6s ease" }} />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-lg font-light tracking-tight" style={{ color: "#1c1917", fontFamily: "'Outfit', sans-serif" }}>
+          <span className="text-lg font-bold tracking-tight text-primary font-heading">
             {String(value).padStart(2, "0")}
           </span>
         </div>
       </div>
-      <span
-        className="mt-1.5 sm:mt-2 text-[10px] sm:text-xs uppercase tracking-[0.2em]"
-        style={{
-          color: "rgba(212,175,130,0.6)",
-          fontFamily: "'Outfit', sans-serif",
-        }}
-      >
+      <span className="mt-1.5 sm:mt-2 text-[10px] sm:text-xs uppercase tracking-[0.2em] text-neutral-grey font-sans">
         {label}
       </span>
     </div>
@@ -188,71 +81,52 @@ function CountdownRing({
 
 // ─── Feature Card ───
 function FeatureCard({
-  icon,
+  category,
   title,
   description,
+  badge,
   delay,
+  icon,
 }: {
-  icon: React.ReactNode;
+  category: string;
   title: string;
   description: string;
+  badge: string;
   delay: number;
+  icon: React.ReactNode;
 }) {
   const { ref, inView } = useInView(0.2);
   return (
     <div
       ref={ref}
-      className="group relative rounded-2xl p-[1px] transition-all duration-700"
+      className="group rounded-3xl bg-white border border-primary/5 p-8 flex flex-col justify-between h-full hover:border-primary/15 hover:shadow-md transition-all duration-500"
       style={{
         opacity: inView ? 1 : 0,
-        transform: inView ? "translateY(0)" : "translateY(40px)",
+        transform: inView ? "translateY(0)" : "translateY(30px)",
         transitionDelay: `${delay}ms`,
-        background:
-          "linear-gradient(135deg, rgba(212,175,130,0.3), rgba(212,175,130,0.05))",
+        transitionDuration: "700ms",
       }}
     >
-      <div
-        className="relative rounded-2xl p-6 sm:p-8 h-full transition-all duration-500"
-        style={{
-          background: "rgba(255,255,255,0.8)",
-          backdropFilter: "blur(20px)",
-        }}
-      >
-        {/* Hover glow */}
-        <div
-          className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-          style={{
-            background:
-              "radial-gradient(circle at 50% 0%, rgba(212,175,130,0.08) 0%, transparent 60%)",
-          }}
-        />
-        <div className="relative z-10">
-          <div
-            className="w-14 h-14 rounded-xl flex items-center justify-center mb-6 transition-transform duration-500 group-hover:scale-110"
-            style={{
-              background:
-                "linear-gradient(135deg, rgba(212,175,130,0.15), rgba(212,175,130,0.05))",
-              border: "1px solid rgba(212,175,130,0.15)",
-            }}
-          >
+      <div>
+        <div className="flex justify-between items-start mb-6">
+          <span className="text-[10px] tracking-[0.2em] font-sans font-bold uppercase text-accent-green">
+            {category}
+          </span>
+          <div className="text-primary/70 group-hover:text-primary transition-colors duration-300">
             {icon}
           </div>
-          <h3
-            className="text-lg font-medium mb-3"
-            style={{ color: "#1c1917", fontFamily: "'Outfit', sans-serif" }}
-          >
-            {title}
-          </h3>
-          <p
-            className="text-sm leading-relaxed"
-            style={{
-              color: "rgba(28,25,23,0.7)",
-              fontFamily: "'Outfit', sans-serif",
-            }}
-          >
-            {description}
-          </p>
         </div>
+        <h3 className="text-2xl font-bold tracking-tight mb-3 font-heading text-primary">
+          {title}
+        </h3>
+        <p className="text-sm leading-relaxed text-neutral-grey font-sans font-normal mb-8">
+          {description}
+        </p>
+      </div>
+      <div className="flex">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-sans font-semibold uppercase tracking-wider bg-primary/5 text-primary border border-primary/5">
+          {badge}
+        </span>
       </div>
     </div>
   );
@@ -292,7 +166,6 @@ export default function Home() {
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
   const [mounted, setMounted] = useState(false);
-  const [scrollY, setScrollY] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
 
@@ -314,9 +187,8 @@ export default function Home() {
     }, 1000);
 
     const handleScroll = () => {
-      setScrollY(window.scrollY);
-      const sections = ["home", "about", "features", "contact"];
-      const scrollPosition = window.scrollY + 100;
+      const sections = ["home", "about", "features", "creators", "testimonials", "contact"];
+      const scrollPosition = window.scrollY + 150;
       for (const section of sections) {
         const element = document.getElementById(section);
         if (element) {
@@ -347,26 +219,23 @@ export default function Home() {
 
   const scrollToSection = useCallback((sectionId: string) => {
     const element = document.getElementById(sectionId);
-    if (element) element.scrollIntoView({ behavior: "smooth" });
+    if (element) {
+      const offset = 80;
+      const bodyRect = document.body.getBoundingClientRect().top;
+      const elementRect = element.getBoundingClientRect().top;
+      const elementPosition = elementRect - bodyRect;
+      const offsetPosition = elementPosition - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+      });
+    }
     setIsMenuOpen(false);
   }, []);
 
-  // Color palette constants
-  const GOLD = "#d4af82";
-  const GOLD_LIGHT = "#e8c9a0";
-  const TEXT_PRIMARY = "#1c1917";
-  const TEXT_SECONDARY = "rgba(28,25,23,0.7)";
-  const BG_LIGHT = "#faf9f6";
-
   return (
-    <div
-      className="overflow-x-hidden"
-      style={{
-        background: BG_LIGHT,
-        color: TEXT_PRIMARY,
-        fontFamily: "'Outfit', sans-serif",
-      }}
-    >
+    <div className="overflow-x-hidden bg-cream text-primary font-sans antialiased">
       <Head>
         <title>Ananka — Plan Your Better Wedding</title>
         <meta
@@ -374,152 +243,133 @@ export default function Home() {
           content="Ananka is coming soon! The ultimate platform for hiring wedding vendors. Launching in 2027."
         />
         <link rel="icon" href="/favicon.ico" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
       </Head>
 
-      <ParticleCanvas />
-
       {/* ─── Navigation ─── */}
-      <nav
-        className="fixed top-0 w-full z-50 transition-all duration-500"
-        style={{
-          background: scrollY > 50 ? "rgba(250,249,246,0.85)" : "transparent",
-          backdropFilter: scrollY > 50 ? "blur(20px)" : "none",
-          borderBottom:
-            scrollY > 50
-              ? "1px solid rgba(212,175,130,0.08)"
-              : "1px solid transparent",
-          padding: scrollY > 50 ? "16px 0" : "28px 0",
-        }}
-      >
-        <div className="max-w-6xl mx-auto px-6 md:px-8 flex justify-between items-center">
+      <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-4xl transition-all duration-500">
+        <div className="bg-white/70 backdrop-blur-xl border border-primary/10 px-6 py-3.5 rounded-full shadow-lg flex justify-between items-center">
           <div
-            className="cursor-pointer transition-all duration-300 hover:opacity-80 flex items-center gap-0"
+            className="cursor-pointer flex items-center gap-0"
             onClick={() => scrollToSection("home")}
           >
             <img
               src="/images/logo_ananka.png"
               alt="Ananka Logo"
-              className="h-8 md:h-9 w-auto"
-              style={{
-                filter: "brightness(0) opacity(0.85)",
-              }}
+              className="h-6 w-auto brightness-0"
             />
-            <span
-              className="text-2xl md:text-3xl font-semibold tracking-wide lowercase"
-              style={{ color: TEXT_PRIMARY, fontFamily: "'Outfit', sans-serif", marginLeft: "-1px" }}
-            >
+            <span className="text-xl font-bold tracking-tight text-primary font-heading leading-none ml-[-2px]">
               nanka
             </span>
           </div>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-8">
-            {["home", "about", "features", "contact"].map((section) => (
+          <div className="hidden md:flex items-center gap-6">
+            {["home", "about", "features", "creators", "testimonials", "contact"].map((section) => (
               <button
                 key={section}
                 onClick={() => scrollToSection(section)}
-                className="relative capitalize text-sm tracking-wide transition-all duration-300"
-                style={{
-                  color: activeSection === section ? GOLD : TEXT_SECONDARY,
-                  fontWeight: activeSection === section ? 500 : 400,
-                  fontFamily: "'Outfit', sans-serif",
-                }}
+                className={`relative capitalize text-xs tracking-wider font-semibold font-sans transition-all duration-300 ${
+                  activeSection === section ? "text-primary" : "text-neutral-grey hover:text-primary"
+                }`}
               >
                 {section}
-                <span
-                  className="absolute -bottom-1 left-0 h-[1px] transition-all duration-300"
-                  style={{
-                    width: activeSection === section ? "100%" : "0%",
-                    background: `linear-gradient(90deg, ${GOLD}, transparent)`,
-                  }}
-                />
+                {activeSection === section && (
+                  <span className="absolute -bottom-1 left-0 w-full h-[1.5px] bg-primary rounded-full" />
+                )}
               </button>
             ))}
           </div>
 
+          <div className="hidden md:flex items-center">
+            <button
+              onClick={() => scrollToSection("contact")}
+              className="bg-primary text-cream px-5 py-2 rounded-full text-xs font-semibold hover:bg-primary/90 transition-all duration-300 shadow-sm"
+            >
+              Get Started
+            </button>
+          </div>
+
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden flex flex-col justify-center items-center w-8 h-8 gap-1.5"
+            className="md:hidden flex flex-col justify-center items-center w-6 h-6 gap-1"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             <span
-              className="block w-6 h-[1px] transition-all duration-300"
-              style={{
-                background: GOLD,
-                transform: isMenuOpen
-                  ? "rotate(45deg) translate(3px, 3px)"
-                  : "none",
-              }}
+              className={`block w-5 h-[1.5px] bg-primary transition-all duration-300 ${
+                isMenuOpen ? "rotate-45 translate-y-[5px]" : ""
+              }`}
             />
             <span
-              className="block w-6 h-[1px] transition-all duration-300"
-              style={{
-                background: GOLD,
-                opacity: isMenuOpen ? 0 : 1,
-              }}
+              className={`block w-5 h-[1.5px] bg-primary transition-all duration-300 ${
+                isMenuOpen ? "opacity-0" : "opacity-100"
+              }`}
             />
             <span
-              className="block w-6 h-[1px] transition-all duration-300"
-              style={{
-                background: GOLD,
-                transform: isMenuOpen
-                  ? "rotate(-45deg) translate(3px, -3px)"
-                  : "none",
-              }}
+              className={`block w-5 h-[1.5px] bg-primary transition-all duration-300 ${
+                isMenuOpen ? "-rotate-45 -translate-y-[5px]" : ""
+              }`}
             />
           </button>
         </div>
 
         {/* Mobile Menu */}
-        <div
-          className="md:hidden overflow-hidden transition-all duration-400"
-          style={{
-            maxHeight: isMenuOpen ? "320px" : "0",
-            background: "rgba(250,249,246,0.95)",
-            backdropFilter: "blur(20px)",
-          }}
-        >
-          <div className="px-6 py-6 flex flex-col gap-4">
-            {["home", "about", "features", "contact"].map((section) => (
+        {isMenuOpen && (
+          <div className="mt-2 mx-4 bg-white/95 backdrop-blur-xl border border-primary/10 rounded-2xl p-4 shadow-xl flex flex-col gap-3 md:hidden">
+            {["home", "about", "features", "creators", "testimonials", "contact"].map((section) => (
               <button
                 key={section}
                 onClick={() => scrollToSection(section)}
-                className="text-left capitalize text-sm tracking-wide transition-all duration-300"
-                style={{
-                  color: activeSection === section ? GOLD : TEXT_SECONDARY,
-                  fontFamily: "'Outfit', sans-serif",
-                }}
+                className={`text-left capitalize text-sm tracking-wide font-sans py-1.5 px-3 rounded-lg transition-all duration-300 ${
+                  activeSection === section ? "bg-primary/5 text-primary font-semibold" : "text-neutral-grey hover:bg-primary/5"
+                }`}
               >
                 {section}
               </button>
             ))}
+            <button
+              onClick={() => scrollToSection("contact")}
+              className="bg-primary text-cream py-2.5 rounded-xl text-center text-sm font-semibold hover:bg-primary/90 transition-all duration-300 mt-2"
+            >
+              Get Started
+            </button>
           </div>
-        </div>
+        )}
       </nav>
 
       {/* ─── Hero Section ─── */}
       <section
         id="home"
-        className="relative min-h-screen flex items-center justify-center px-6 md:px-12"
-        style={{ zIndex: 1 }}
+        className="relative min-h-screen flex items-center justify-center pt-28 pb-16 px-6 md:px-12 grid-bg overflow-hidden"
       >
-        {/* Subtle radial glow */}
+        {/* Subtle radial overlay for grid fading at edges */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              "radial-gradient(ellipse 60% 40% at 50% 40%, rgba(212,175,130,0.06) 0%, transparent 70%)",
+              "radial-gradient(circle at 50% 50%, transparent 20%, #fafaf7 90%)",
           }}
         />
 
-        <div className="relative z-10 text-center max-w-4xl mx-auto">
+        {/* Floating 3D graphics */}
+        <div className="absolute left-[5%] top-[25%] w-28 sm:w-36 md:w-56 pointer-events-none animate-float-slow hidden lg:block z-0">
+          <img
+            src="/images/ananka_3d_clay_pink.png"
+            alt="Pink clay shape"
+            className="w-full h-auto object-contain drop-shadow-[0_20px_40px_rgba(233,177,189,0.25)]"
+          />
+        </div>
+        <div className="absolute right-[5%] bottom-[20%] w-28 sm:w-36 md:w-56 pointer-events-none animate-float-delayed hidden lg:block z-0">
+          <img
+            src="/images/ananka_3d_clay_purple.png"
+            alt="Purple clay shape"
+            className="w-full h-auto object-contain drop-shadow-[0_20px_40px_rgba(205,189,220,0.25)]"
+          />
+        </div>
+
+        <div className="relative z-10 text-center max-w-4xl mx-auto flex flex-col items-center">
           {/* Tagline */}
           <div
-            className="mb-6"
+            className="mb-8"
             style={{
               opacity: mounted ? 1 : 0,
               transform: mounted ? "translateY(0)" : "translateY(20px)",
@@ -527,63 +377,47 @@ export default function Home() {
             }}
           >
             <span
-              className="inline-block px-4 py-1.5 rounded-full text-xs uppercase tracking-[0.25em]"
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs uppercase tracking-[0.2em] font-sans font-bold"
               style={{
-                color: GOLD,
-                border: `1px solid rgba(212,175,130,0.2)`,
-                background: "rgba(212,175,130,0.05)",
-                fontFamily: "'Outfit', sans-serif",
+                color: "#4f7257",
+                border: `1px solid rgba(79,114,87,0.2)`,
+                background: "rgba(79,114,87,0.06)",
               }}
             >
+              <span className="w-1.5 h-1.5 rounded-full bg-accent-green animate-pulse" />
               Coming 2027
             </span>
           </div>
 
           {/* Heading */}
           <h1
-            className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-medium mb-6 leading-[1.1]"
+            className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-bold mb-6 tracking-tight leading-[0.95] font-heading text-primary"
             style={{
-              fontFamily: "'Outfit', sans-serif",
-              color: TEXT_PRIMARY,
               opacity: mounted ? 1 : 0,
               transform: mounted ? "translateY(0)" : "translateY(20px)",
               transition: "all 0.8s ease 0.4s",
             }}
           >
-            Plan Your{" "}
-            <span
-              className="italic"
-              style={{
-                background: `linear-gradient(135deg, ${GOLD}, ${GOLD_LIGHT})`,
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-              }}
-            >
-              Better
-            </span>
-            <br />
-            Wedding
+            Plan Your <br />
+            <span className="text-accent-yellow italic font-normal">Better</span> Wedding
           </h1>
 
           {/* Subheading */}
           <p
-            className="text-base md:text-lg max-w-xl mx-auto mb-10 leading-relaxed"
+            className="text-base sm:text-lg md:text-xl max-w-xl mx-auto mb-10 leading-relaxed text-neutral-grey font-sans font-normal"
             style={{
-              color: TEXT_SECONDARY,
-              fontFamily: "'Outfit', sans-serif",
-              fontWeight: 300,
               opacity: mounted ? 1 : 0,
               transform: mounted ? "translateY(0)" : "translateY(20px)",
               transition: "all 0.8s ease 0.6s",
             }}
           >
-            The ultimate platform for discovering and booking the perfect
+            The ultimate platform for discovering, vetting, and booking the perfect
             wedding vendors — beautifully simple.
           </p>
 
           {/* CTA Buttons */}
           <div
-            className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-12 sm:mb-16 px-4 sm:px-0"
+            className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-16 px-4 sm:px-0"
             style={{
               opacity: mounted ? 1 : 0,
               transform: mounted ? "translateY(0)" : "translateY(20px)",
@@ -592,29 +426,14 @@ export default function Home() {
           >
             <button
               onClick={() => scrollToSection("contact")}
-              className="group relative px-8 py-3.5 rounded-full text-sm font-medium tracking-wide overflow-hidden transition-all duration-500"
-              style={{
-                background: `linear-gradient(135deg, ${GOLD}, ${GOLD_LIGHT})`,
-                color: BG_LIGHT,
-                fontFamily: "'Outfit', sans-serif",
-              }}
+              className="group px-7 py-3.5 rounded-full text-sm font-semibold tracking-wide flex items-center justify-center gap-2 bg-primary text-cream hover:bg-primary/95 transition-all duration-300 shadow-md hover:shadow-lg"
             >
-              <span className="relative z-10">Get Notified</span>
-              <div
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                style={{
-                  background: `linear-gradient(135deg, ${GOLD_LIGHT}, ${GOLD})`,
-                }}
-              />
+              Get Notified
+              <span className="text-xs transition-transform duration-300 group-hover:translate-x-1">→</span>
             </button>
             <button
               onClick={() => scrollToSection("about")}
-              className="px-8 py-3.5 rounded-full text-sm font-medium tracking-wide transition-all duration-500 hover:bg-[rgba(212,175,130,0.08)]"
-              style={{
-                color: GOLD,
-                border: `1px solid rgba(212,175,130,0.25)`,
-                fontFamily: "'Outfit', sans-serif",
-              }}
+              className="px-7 py-3.5 rounded-full text-sm font-semibold tracking-wide transition-all duration-300 border border-primary/20 text-primary hover:bg-primary/5"
             >
               Learn More
             </button>
@@ -622,22 +441,17 @@ export default function Home() {
 
           {/* Countdown Timer */}
           <div
+            className="w-full max-w-md bg-white/40 backdrop-blur-md border border-primary/5 rounded-3xl p-6 sm:p-8 shadow-sm"
             style={{
               opacity: mounted ? 1 : 0,
               transform: mounted ? "translateY(0)" : "translateY(20px)",
               transition: "all 0.8s ease 1s",
             }}
           >
-            <p
-              className="text-xs uppercase tracking-[0.25em] mb-6"
-              style={{
-                color: TEXT_SECONDARY,
-                fontFamily: "'Outfit', sans-serif",
-              }}
-            >
+            <p className="text-xs uppercase tracking-[0.25em] mb-6 font-bold text-neutral-grey font-sans">
               Launching in
             </p>
-            <div className="flex justify-center gap-4 sm:gap-6 md:gap-10">
+            <div className="flex justify-center gap-6 sm:gap-8">
               <CountdownRing value={days} max={365} label="Days" />
               <CountdownRing value={hours} max={24} label="Hours" />
               <CountdownRing value={minutes} max={60} label="Min" />
@@ -645,172 +459,61 @@ export default function Home() {
             </div>
           </div>
         </div>
-
-        {/* Scroll indicator */}
-        <div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
-          style={{
-            opacity: mounted ? 1 : 0,
-            transition: "opacity 1s ease 1.5s",
-          }}
-        >
-          <div
-            className="flex flex-col items-center gap-2 animate-bounce"
-            style={{ animationDuration: "2s" }}
-          >
-            <span
-              className="text-[10px] uppercase tracking-[0.2em]"
-              style={{ color: TEXT_SECONDARY }}
-            >
-              Scroll
-            </span>
-            <svg width="16" height="24" viewBox="0 0 16 24" fill="none">
-              <rect
-                x="0.5"
-                y="0.5"
-                width="15"
-                height="23"
-                rx="7.5"
-                stroke="rgba(212,175,130,0.3)"
-              />
-              <circle
-                cx="8"
-                cy="8"
-                r="2"
-                fill="rgba(212,175,130,0.5)"
-                className="animate-scroll-dot"
-              />
-            </svg>
-          </div>
-        </div>
       </section>
 
       {/* ─── About Section ─── */}
       <section
         id="about"
-        className="relative py-16 sm:py-24 md:py-32 px-5 sm:px-6 md:px-12"
-        style={{ zIndex: 1 }}
+        className="relative py-24 sm:py-32 px-6 md:px-12 bg-white/30"
       >
-        {/* Section divider */}
-        <div
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-[1px] h-20"
-          style={{
-            background: `linear-gradient(to bottom, transparent, rgba(212,175,130,0.2), transparent)`,
-          }}
-        />
-
-        <div className="max-w-5xl mx-auto">
-          <Reveal>
-            <div className="text-center mb-16">
-              <span
-                className="text-xs uppercase tracking-[0.3em] mb-4 block"
-                style={{ color: GOLD, fontFamily: "'Outfit', sans-serif" }}
-              >
-                Our Story
-              </span>
-              <h2
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal"
-                style={{
-                  fontFamily: "'Outfit', sans-serif",
-                  color: TEXT_PRIMARY,
-                }}
-              >
-                About{" "}
-                <span className="italic" style={{ color: GOLD }}>
-                  Ananka
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+            <div className="lg:col-span-5">
+              <Reveal>
+                <span className="text-xs uppercase tracking-[0.25em] text-accent-green font-sans font-bold mb-4 block">
+                  Our Purpose
                 </span>
-              </h2>
+                <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight font-heading leading-tight text-primary">
+                  We match you with the <span className="text-accent-green italic font-normal">perfect</span> wedding creators.
+                </h2>
+              </Reveal>
             </div>
-          </Reveal>
 
-          <div className="max-w-2xl mx-auto space-y-6">
-            <Reveal delay={100}>
-              <h3
-                className="text-xl md:text-2xl font-normal"
-                style={{
-                  fontFamily: "'Outfit', sans-serif",
-                  color: TEXT_PRIMARY,
-                }}
-              >
-                Simplifying Wedding Planning
-              </h3>
-            </Reveal>
-            <Reveal delay={200}>
-              <p
-                className="text-sm leading-[1.8]"
-                style={{
-                  color: TEXT_SECONDARY,
-                  fontFamily: "'Outfit', sans-serif",
-                  fontWeight: 300,
-                }}
-              >
-                Ananka will be your all-in-one solution for finding, vetting,
-                and booking the perfect wedding vendors. From photographers to
-                florists, caterers to venues — we connect you with the best
-                professionals in the industry.
-              </p>
-            </Reveal>
-            <Reveal delay={300}>
-              <p
-                className="text-sm leading-[1.8]"
-                style={{
-                  color: TEXT_SECONDARY,
-                  fontFamily: "'Outfit', sans-serif",
-                  fontWeight: 300,
-                }}
-              >
-                Our platform is designed with both couples and vendors in mind,
-                creating a seamless experience that saves time, reduces stress,
-                and ensures your special day is everything you&apos;ve dreamed
-                of.
-              </p>
-            </Reveal>
-            <Reveal delay={400}>
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0 pt-4">
-                <button
-                  onClick={() => scrollToSection("features")}
-                  className="group inline-flex items-center gap-2 text-sm tracking-wide transition-all duration-300"
-                  style={{ color: GOLD, fontFamily: "'Outfit', sans-serif" }}
-                >
-                  Explore Features
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    className="transition-transform duration-300 group-hover:translate-x-1"
+            <div className="lg:col-span-7 space-y-6 md:space-y-8">
+              <Reveal delay={150}>
+                <h3 className="text-xl md:text-2xl font-bold font-heading text-primary">
+                  Simplifying Wedding Planning, Seamlessly
+                </h3>
+              </Reveal>
+              <Reveal delay={250}>
+                <p className="text-sm sm:text-base leading-relaxed text-neutral-grey font-sans font-normal">
+                  Ananka is designed to be your all-in-one partner for discovering, vetting, and booking premium wedding vendors. We eliminate the friction of finding the right photographer, florists, caterers, or venues, connecting you directly with verified professionals who bring your vision to life.
+                </p>
+              </Reveal>
+              <Reveal delay={350}>
+                <p className="text-sm sm:text-base leading-relaxed text-neutral-grey font-sans font-normal">
+                  Our platform serves both couples and creative small businesses, building a seamless interface that reduces planning stress, automates contracting, and secures transactions. We believe organizing your special day should be just as joyful as the day itself.
+                </p>
+              </Reveal>
+              
+              <Reveal delay={450}>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pt-6 border-t border-primary/10">
+                  <button
+                    onClick={() => scrollToSection("features")}
+                    className="group inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-accent-green transition-all duration-300"
                   >
-                    <path
-                      d="M6 12L10 8L6 4"
-                      stroke={GOLD}
-                      strokeWidth="1.2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </button>
+                    Explore Our Features
+                    <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
+                  </button>
 
-                {/* Creator signature — subtle inline */}
-                <div className="flex items-center gap-3">
-                  <div
-                    className="w-6 h-[1px]"
-                    style={{ background: "rgba(212,175,130,0.2)" }}
-                  />
-                  <span
-                    className="text-xs tracking-wide"
-                    style={{
-                      color: TEXT_SECONDARY,
-                      fontFamily: "'Outfit', sans-serif",
-                    }}
-                  >
-                    by{" "}
-                    <span style={{ color: GOLD_LIGHT }}>
-                      I Putu Andika Putra
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs text-neutral-grey font-sans font-semibold">
+                      Crafted by <span className="text-primary font-bold">I Putu Andika Putra</span>
                     </span>
-                  </span>
+                  </div>
                 </div>
-              </div>
-            </Reveal>
+              </Reveal>
+            </div>
           </div>
         </div>
       </section>
@@ -818,62 +521,34 @@ export default function Home() {
       {/* ─── Features Section ─── */}
       <section
         id="features"
-        className="relative py-16 sm:py-24 md:py-32 px-5 sm:px-6 md:px-12"
-        style={{ zIndex: 1 }}
+        className="relative py-24 sm:py-32 px-6 md:px-12 grid-bg"
       >
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(ellipse 80% 50% at 50% 50%, rgba(212,175,130,0.03) 0%, transparent 70%)",
-          }}
-        />
-
-        <div className="max-w-5xl mx-auto relative z-10">
+        <div className="max-w-6xl mx-auto relative z-10">
           <Reveal>
-            <div className="text-center mb-10 sm:mb-16">
-              <span
-                className="text-xs uppercase tracking-[0.3em] mb-4 block"
-                style={{ color: GOLD, fontFamily: "'Outfit', sans-serif" }}
-              >
+            <div className="mb-16">
+              <span className="text-xs uppercase tracking-[0.25em] text-accent-green font-sans font-bold mb-4 block">
                 Features
               </span>
-              <h2
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium mb-4"
-                style={{
-                  fontFamily: "'Outfit', sans-serif",
-                  color: TEXT_PRIMARY,
-                }}
-              >
-                What to{" "}
-                <span className="italic" style={{ color: GOLD }}>
-                  Expect
-                </span>
+              <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-4 font-heading text-primary">
+                What to <span className="text-accent-green italic font-normal">Expect</span>
               </h2>
-              <p
-                className="text-sm max-w-lg mx-auto leading-relaxed"
-                style={{
-                  color: TEXT_SECONDARY,
-                  fontFamily: "'Outfit', sans-serif",
-                  fontWeight: 300,
-                }}
-              >
-                Ananka will revolutionize the wedding planning experience with
-                these innovative features.
+              <p className="text-sm sm:text-base max-w-lg text-neutral-grey font-sans font-normal">
+                Ananka will revolutionize the wedding planning experience with these innovative features built for modern couples.
               </p>
             </div>
           </Reveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <FeatureCard
               delay={0}
+              category="Discovery"
               icon={
                 <svg
-                  className="w-6 h-6"
+                  className="w-5 h-5"
                   fill="none"
-                  stroke={GOLD}
+                  stroke="currentColor"
                   viewBox="0 0 24 24"
-                  strokeWidth="1.5"
+                  strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
@@ -881,18 +556,20 @@ export default function Home() {
                   <line x1="21" y1="21" x2="16.65" y2="16.65" />
                 </svg>
               }
-              title="Vendor Discovery"
-              description="Browse through a curated selection of top-rated wedding vendors in your area, with detailed profiles, portfolios, and reviews."
+              title="Vendor Match"
+              description="Browse through a curated, vetted selection of top-rated wedding vendors in your area, with detailed visual portfolios and authentic reviews."
+              badge="Instant Match"
             />
             <FeatureCard
               delay={150}
+              category="Planning"
               icon={
                 <svg
-                  className="w-6 h-6"
+                  className="w-5 h-5"
                   fill="none"
-                  stroke={GOLD}
+                  stroke="currentColor"
                   viewBox="0 0 24 24"
-                  strokeWidth="1.5"
+                  strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
@@ -902,70 +579,209 @@ export default function Home() {
                   <line x1="3" y1="10" x2="21" y2="10" />
                 </svg>
               }
-              title="Planning Tools"
-              description="Stay organized with comprehensive planning tools, including budget trackers, timeline builders, and vendor management."
+              title="Intelligent Tools"
+              description="Stay completely organized with smart collaborative tools, including direct client-vendor chat, timeline builds, and visual moodboards."
+              badge="Real-time Sync"
             />
             <FeatureCard
               delay={300}
+              category="Payments"
               icon={
                 <svg
-                  className="w-6 h-6"
+                  className="w-5 h-5"
                   fill="none"
-                  stroke={GOLD}
+                  stroke="currentColor"
                   viewBox="0 0 24 24"
-                  strokeWidth="1.5"
+                  strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                 </svg>
               }
-              title="Secure Booking"
-              description="Book vendors with confidence through our secure payment system and transparent contracts, all managed within the platform."
+              title="Secure Contracts"
+              description="Book vendor packages with absolute confidence using escrowed payment systems, split payments, and digital contract signatures."
+              badge="Escrow Protected"
             />
+          </div>
+        </div>
+      </section>
+
+      {/* ─── Creators Section ─── */}
+      <section id="creators" className="relative py-24 sm:py-32 px-6 md:px-12 bg-white/30">
+        <div className="max-w-6xl mx-auto">
+          <Reveal>
+            <div className="mb-16">
+              <span className="text-xs uppercase tracking-[0.25em] text-accent-green font-sans font-bold mb-4 block">
+                The Team
+              </span>
+              <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-4 font-heading text-primary">
+                The Creators Behind <span className="text-accent-pink italic font-normal">Ananka</span>
+              </h2>
+              <p className="text-sm sm:text-base max-w-lg text-neutral-grey font-sans font-normal">
+                A dedicated group of designers, technologists, and industry experts building the future of wedding planning.
+              </p>
+            </div>
+          </Reveal>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Card 1: Putu Andika */}
+            <Reveal delay={0}>
+              <div className="group rounded-3xl bg-accent-purple/5 border border-accent-purple/20 p-8 h-full flex flex-col justify-between transition-all duration-500 hover:-translate-y-1 hover:shadow-md">
+                <div>
+                  <div className="w-24 h-24 rounded-2xl overflow-hidden mb-6 border-2 border-accent-purple/30 bg-accent-purple/10">
+                    <img
+                      src="/images/ceo_ananka.jpg"
+                      alt="I Putu Andika Putra"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
+                  <h3 className="text-2xl font-bold font-heading text-primary tracking-tight mb-1">
+                    I Putu Andika Putra
+                  </h3>
+                  <span className="text-xs font-semibold uppercase tracking-wider text-accent-purple block mb-4">
+                    Founder & Lead Architect
+                  </span>
+                  <p className="text-sm text-neutral-grey leading-relaxed font-sans font-normal">
+                    Software engineer and creative developer building high-quality, elegant marketplace solutions to streamline wedding organization.
+                  </p>
+                </div>
+                <div className="pt-6 mt-6 border-t border-accent-purple/10 flex justify-between items-center text-xs text-neutral-grey font-sans font-medium">
+                  <span>Bali, ID</span>
+                  <span className="text-accent-purple font-semibold">Lead Developer</span>
+                </div>
+              </div>
+            </Reveal>
+
+            {/* Card 2: Ni Wayan Sari */}
+            <Reveal delay={150}>
+              <div className="group rounded-3xl bg-accent-pink/5 border border-accent-pink/20 p-8 h-full flex flex-col justify-between transition-all duration-500 hover:-translate-y-1 hover:shadow-md">
+                <div>
+                  <div className="w-24 h-24 rounded-2xl overflow-hidden mb-6 border-2 border-accent-pink/30 bg-accent-pink/20 flex items-center justify-center font-heading text-2xl font-bold text-accent-pink">
+                    X
+                  </div>
+                  <h3 className="text-2xl font-bold font-heading text-primary tracking-tight mb-1">
+                    X
+                  </h3>
+                  <span className="text-xs font-semibold uppercase tracking-wider text-accent-pink block mb-4">
+                    Co-Founder & Art Director
+                  </span>
+                  <p className="text-sm text-neutral-grey leading-relaxed font-sans font-normal">
+                    Designer and brand strategist crafting modern aesthetics and interactive user experiences tailored for wedding couples.
+                  </p>
+                </div>
+                <div className="pt-6 mt-6 border-t border-accent-pink/10 flex justify-between items-center text-xs text-neutral-grey font-sans font-medium">
+                  <span>Bali, ID</span>
+                  <span className="text-accent-pink font-semibold">Design Lead</span>
+                </div>
+              </div>
+            </Reveal>
+
+            {/* Card 3: Ketut Budi */}
+            <Reveal delay={300}>
+              <div className="group rounded-3xl bg-accent-green/5 border border-accent-green/20 p-8 h-full flex flex-col justify-between transition-all duration-500 hover:-translate-y-1 hover:shadow-md">
+                <div>
+                  <div className="w-24 h-24 rounded-2xl overflow-hidden mb-6 border-2 border-accent-green/30 bg-accent-green/20 flex items-center justify-center font-heading text-2xl font-bold text-accent-green">
+                    X
+                  </div>
+                  <h3 className="text-2xl font-bold font-heading text-primary tracking-tight mb-1">
+                    X
+                  </h3>
+                  <span className="text-xs font-semibold uppercase tracking-wider text-accent-green block mb-4">
+                    Head of Operations
+                  </span>
+                  <p className="text-sm text-neutral-grey leading-relaxed font-sans font-normal">
+                    Operations specialist focused on vendor network expansion, contract validation, and customer success management.
+                  </p>
+                </div>
+                <div className="pt-6 mt-6 border-t border-accent-green/10 flex justify-between items-center text-xs text-neutral-grey font-sans font-medium">
+                  <span>Jakarta, ID</span>
+                  <span className="text-accent-green font-semibold">Operations</span>
+                </div>
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── Testimonials Section ─── */}
+      <section id="testimonials" className="relative py-24 sm:py-32 px-6 md:px-12 grid-bg">
+        <div className="max-w-6xl mx-auto">
+          <Reveal>
+            <div className="text-center mb-16">
+              <span className="text-xs uppercase tracking-[0.25em] text-accent-green font-sans font-bold mb-4 block">
+                Testimonials
+              </span>
+              <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-4 font-heading text-primary">
+                Trusted by <span className="text-accent-yellow italic font-normal">Creative</span> Couples
+              </h2>
+              <p className="text-sm sm:text-base max-w-lg mx-auto text-neutral-grey font-sans font-normal">
+                Here is what early testers and wedding professionals say about the Ananka ecosystem.
+              </p>
+            </div>
+          </Reveal>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Testimonial 1 */}
+            <Reveal delay={0}>
+              <div className="bg-white border border-primary/5 rounded-3xl p-8 flex flex-col justify-between h-full hover:border-primary/15 transition-all duration-300">
+                <p className="text-sm sm:text-base leading-relaxed text-primary font-sans font-medium italic mb-6">
+                  &ldquo;Finding trustworthy vendors in Bali used to take hours of manual DMs. Ananka simplifies the matching process in a way that feels premium and transparent.&rdquo;
+                </p>
+                <div>
+                  <h4 className="text-base font-bold font-heading text-primary">Made & Gede</h4>
+                  <span className="text-xs text-neutral-grey font-sans">Married in Ubud, 2026</span>
+                </div>
+              </div>
+            </Reveal>
+
+            {/* Testimonial 2 */}
+            <Reveal delay={150}>
+              <div className="bg-white border border-primary/5 rounded-3xl p-8 flex flex-col justify-between h-full hover:border-primary/15 transition-all duration-300">
+                <p className="text-sm sm:text-base leading-relaxed text-primary font-sans font-medium italic mb-6">
+                  &ldquo;As a wedding photographer, Ananka helps me list my packages clearly without administrative hassle. It gives couples exact prices without hidden fees.&rdquo;
+                </p>
+                <div>
+                  <h4 className="text-base font-bold font-heading text-primary">Alex Tan</h4>
+                  <span className="text-xs text-neutral-grey font-sans">Professional Photographer</span>
+                </div>
+              </div>
+            </Reveal>
+
+            {/* Testimonial 3 */}
+            <Reveal delay={300}>
+              <div className="bg-white border border-primary/5 rounded-3xl p-8 flex flex-col justify-between h-full hover:border-primary/15 transition-all duration-300">
+                <p className="text-sm sm:text-base leading-relaxed text-primary font-sans font-medium italic mb-6">
+                  &ldquo;The milestone-based payment and escrow system is a game changer. It gives both couples and vendors complete peace of mind throughout the booking process.&rdquo;
+                </p>
+                <div>
+                  <h4 className="text-base font-bold font-heading text-primary">Siti & Rian</h4>
+                  <span className="text-xs text-neutral-grey font-sans">Planning for 2027</span>
+                </div>
+              </div>
+            </Reveal>
           </div>
         </div>
       </section>
 
       {/* ─── Newsletter Section ─── */}
       <section
-        className="relative py-16 sm:py-24 md:py-32 px-5 sm:px-6 md:px-12"
-        style={{ zIndex: 1 }}
+        className="relative py-24 sm:py-32 px-6 md:px-12 bg-white/30"
       >
-        <div className="max-w-2xl mx-auto text-center">
+        <div className="max-w-3xl mx-auto text-center">
           <Reveal>
-            <span
-              className="text-xs uppercase tracking-[0.3em] mb-4 block"
-              style={{ color: GOLD, fontFamily: "'Outfit', sans-serif" }}
-            >
-              Stay Updated
+            <span className="text-xs uppercase tracking-[0.25em] text-accent-green font-sans font-bold mb-4 block">
+              Newsletter
             </span>
           </Reveal>
           <Reveal delay={100}>
-            <h2
-              className="text-3xl sm:text-4xl md:text-5xl font-medium mb-4"
-              style={{
-                fontFamily: "'Outfit', sans-serif",
-                color: TEXT_PRIMARY,
-              }}
-            >
-              Be the First to{" "}
-              <span className="italic" style={{ color: GOLD }}>
-                Know
-              </span>
+            <h2 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4 font-heading text-primary">
+              Stay in the <span className="text-accent-pink italic font-normal">Loop</span>
             </h2>
           </Reveal>
           <Reveal delay={200}>
-            <p
-              className="text-sm mb-10 leading-relaxed"
-              style={{
-                color: TEXT_SECONDARY,
-                fontFamily: "'Outfit', sans-serif",
-                fontWeight: 300,
-              }}
-            >
-              Sign up for our newsletter to get updates on our progress and
-              early access when we launch.
+            <p className="text-sm sm:text-base mb-10 text-neutral-grey font-sans font-normal max-w-md mx-auto">
+              Subscribe to get updates on our development path, design showcases, and early beta access.
             </p>
           </Reveal>
 
@@ -979,48 +795,23 @@ export default function Home() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
-                className="flex-grow px-5 py-3 rounded-full text-sm focus:outline-none transition-all duration-300"
-                style={{
-                  background: "rgba(212,175,130,0.06)",
-                  border: "1px solid rgba(212,175,130,0.15)",
-                  color: TEXT_PRIMARY,
-                  fontFamily: "'Outfit', sans-serif",
-                }}
-                onFocus={(e) => {
-                  e.currentTarget.style.borderColor = "rgba(212,175,130,0.4)";
-                  e.currentTarget.style.background = "rgba(212,175,130,0.08)";
-                }}
-                onBlur={(e) => {
-                  e.currentTarget.style.borderColor = "rgba(212,175,130,0.15)";
-                  e.currentTarget.style.background = "rgba(212,175,130,0.06)";
-                }}
+                className="flex-grow px-6 py-3.5 rounded-full text-sm font-sans focus:outline-none transition-all duration-300 bg-white border border-primary/10 text-primary placeholder-primary/30 focus:border-primary/30"
                 required
               />
               <button
                 type="submit"
-                className="px-7 py-3 rounded-full text-sm font-medium tracking-wide transition-all duration-500 hover:shadow-lg"
-                style={{
-                  background: `linear-gradient(135deg, ${GOLD}, ${GOLD_LIGHT})`,
-                  color: BG_LIGHT,
-                  fontFamily: "'Outfit', sans-serif",
-                }}
+                className="group px-7 py-3.5 rounded-full text-sm font-semibold tracking-wide bg-primary text-cream hover:bg-primary/95 transition-all duration-300 flex items-center justify-center gap-2"
               >
                 Notify Me
+                <span className="text-xs transition-transform duration-300 group-hover:translate-x-1">→</span>
               </button>
             </form>
 
             {subscribed && (
               <div
-                className="mt-6 px-5 py-3 rounded-full text-sm inline-block"
-                style={{
-                  background: "rgba(212,175,130,0.08)",
-                  border: "1px solid rgba(212,175,130,0.2)",
-                  color: GOLD_LIGHT,
-                  fontFamily: "'Outfit', sans-serif",
-                  animation: "fadeIn 0.5s ease",
-                }}
+                className="mt-6 px-6 py-2.5 rounded-full text-xs font-semibold inline-block bg-accent-green/10 border border-accent-green/20 text-accent-green font-sans animate-bounce"
               >
-                ✓ Thank you for subscribing! We&apos;ll keep you updated.
+                ✓ Thanks! We will keep you updated.
               </div>
             )}
           </Reveal>
@@ -1030,42 +821,22 @@ export default function Home() {
       {/* ─── Contact Section ─── */}
       <section
         id="contact"
-        className="relative py-16 sm:py-24 md:py-32 px-5 sm:px-6 md:px-12"
-        style={{ zIndex: 1 }}
+        className="relative py-24 sm:py-32 px-6 md:px-12 grid-bg"
       >
-        <div className="max-w-2xl mx-auto text-center">
+        <div className="max-w-3xl mx-auto text-center relative z-10">
           <Reveal>
-            <span
-              className="text-xs uppercase tracking-[0.3em] mb-4 block"
-              style={{ color: GOLD, fontFamily: "'Outfit', sans-serif" }}
-            >
+            <span className="text-xs uppercase tracking-[0.25em] text-accent-green font-sans font-bold mb-4 block">
               Contact
             </span>
           </Reveal>
           <Reveal delay={100}>
-            <h2
-              className="text-3xl sm:text-4xl md:text-5xl font-medium mb-4"
-              style={{
-                fontFamily: "'Outfit', sans-serif",
-                color: TEXT_PRIMARY,
-              }}
-            >
-              Get in{" "}
-              <span className="italic" style={{ color: GOLD }}>
-                Touch
-              </span>
+            <h2 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4 font-heading text-primary">
+              Let&apos;s Build <span className="text-accent-yellow italic font-normal">Together</span>
             </h2>
           </Reveal>
           <Reveal delay={200}>
-            <p
-              className="text-sm mb-10 leading-relaxed"
-              style={{
-                color: TEXT_SECONDARY,
-                fontFamily: "'Outfit', sans-serif",
-                fontWeight: 300,
-              }}
-            >
-              Have questions or feedback? We&apos;d love to hear from you.
+            <p className="text-sm sm:text-base mb-10 text-neutral-grey font-sans font-normal max-w-md mx-auto">
+              Have vendor feedback, business inquires, or just want to chat about weddings? Connect with our team.
             </p>
           </Reveal>
 
@@ -1092,22 +863,9 @@ export default function Home() {
                   key={social.label}
                   href={social.href}
                   aria-label={social.label}
-                  className="w-11 h-11 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
-                  style={{
-                    border: "1px solid rgba(212,175,130,0.15)",
-                    background: "rgba(212,175,130,0.04)",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "rgba(212,175,130,0.12)";
-                    e.currentTarget.style.borderColor = "rgba(212,175,130,0.3)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = "rgba(212,175,130,0.04)";
-                    e.currentTarget.style.borderColor =
-                      "rgba(212,175,130,0.15)";
-                  }}
+                  className="w-12 h-12 rounded-full flex items-center justify-center border border-primary/10 bg-white/50 backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:border-primary/20 hover:bg-white"
                 >
-                  <svg className="w-4 h-4" fill={GOLD} viewBox="0 0 24 24">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                     <path d={social.path} />
                   </svg>
                 </a>
@@ -1116,21 +874,11 @@ export default function Home() {
           </Reveal>
 
           <Reveal delay={400}>
-            <p
-              className="text-sm"
-              style={{
-                color: TEXT_SECONDARY,
-                fontFamily: "'Outfit', sans-serif",
-              }}
-            >
+            <p className="text-sm text-neutral-grey font-sans">
               Email us at{" "}
               <a
                 href="mailto:info@ananka.id"
-                className="transition-all duration-300 hover:opacity-80"
-                style={{
-                  color: GOLD,
-                  borderBottom: `1px solid rgba(212,175,130,0.3)`,
-                }}
+                className="font-semibold text-primary border-b border-primary/20 hover:border-primary transition-all duration-300 pb-0.5"
               >
                 info@ananka.id
               </a>
@@ -1144,14 +892,11 @@ export default function Home() {
         className="relative py-8 px-6 md:px-12"
         style={{
           zIndex: 1,
-          borderTop: "1px solid rgba(212,175,130,0.06)",
+          borderTop: "1px solid rgba(44, 44, 29, 0.08)",
         }}
       >
         <div className="max-w-5xl mx-auto flex justify-center items-center">
-          <p
-            className="text-xs tracking-wide"
-            style={{ color: TEXT_SECONDARY, fontFamily: "'Outfit', sans-serif" }}
-          >
+          <p className="text-xs tracking-wide text-neutral-grey font-sans">
             © {new Date().getFullYear()} Ananka. All rights reserved.
           </p>
         </div>
@@ -1160,12 +905,12 @@ export default function Home() {
       {/* ─── Global Styles ─── */}
       <style jsx global>{`
         ::selection {
-          background: rgba(212, 175, 130, 0.3);
-          color: #1c1917;
+          background: rgba(44, 44, 29, 0.08);
+          color: #2c2c1d;
         }
 
         ::placeholder {
-          color: rgba(200, 190, 180, 0.35) !important;
+          color: rgba(44, 44, 29, 0.3) !important;
         }
 
         /* Smooth scrolling */
@@ -1175,52 +920,17 @@ export default function Home() {
 
         /* Scrollbar */
         ::-webkit-scrollbar {
-          width: 4px;
+          width: 6px;
         }
         ::-webkit-scrollbar-track {
-          background: #faf9f6;
+          background: #fafaf7;
         }
         ::-webkit-scrollbar-thumb {
-          background: rgba(212, 175, 130, 0.2);
+          background: rgba(44, 44, 29, 0.1);
           border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-          background: rgba(212, 175, 130, 0.4);
-        }
-
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes scroll-dot {
-          0% {
-            cy: 7;
-            opacity: 1;
-          }
-          50% {
-            cy: 14;
-            opacity: 0.3;
-          }
-          100% {
-            cy: 7;
-            opacity: 1;
-          }
-        }
-
-        .animate-scroll-dot {
-          animation: scroll-dot 2s ease-in-out infinite;
-        }
-
-        /* Override dark mode colors from globals.css */
-        body {
-          background: #faf9f6 !important;
+          background: rgba(44, 44, 29, 0.2);
         }
       `}</style>
     </div>
